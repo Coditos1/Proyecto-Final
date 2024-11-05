@@ -24,12 +24,11 @@
             echo "Error: " . $stmt->error;
         }
         
-        $stmt->close();
-        $conn->close();
+
     }
 ?>
 <main class="maquinas-container">
-        <form id="register-supervisor-form" action="insert_supervisor.php" method="POST" class="form-container">
+        <form id="register-supervisor-form" action="UserSupervisor.php" method="POST" class="form-container">
             <h2>Formulario de Registro de Supervisor</h2>
 
             <label for="name">Nombre:</label>

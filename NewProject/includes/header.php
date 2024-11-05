@@ -12,7 +12,7 @@
 <body>
     <header>
         <nav>
-            <h1>Supervisor Page</h1>
+            <h1><a href="Supervisor.php" style="text-decoration: none; color: inherit;">Supervisor Page</a></h1>
             <ul>
                 <li><a href="Reporte.php"><i class="fas fa-exclamation-triangle"></i>Ver Reportes de Fallas</a></li>
                 <li><a href="Repuesto.php"><i class="fas fa-file-alt"></i>Repuestos para Mantenimiento</a></li>

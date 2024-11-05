@@ -28,9 +28,6 @@
             echo "Error: " . $stmt->error;
         }
         
-        // Cerrar conexión
-        $stmt->close();
-        $conn->close();
     }
 ?>
     <main class="maquinas-container">

@@ -24,8 +24,6 @@
             echo "Error: " . $stmt->error;
         }
         
-        $stmt->close();
-        $conn->close();
     }
 ?>
 <main class="maquinas-container">
