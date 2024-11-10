@@ -63,7 +63,9 @@
     </style>
 </head>
 <body>
-    <form action="reportar_falla.php" method="post">
+
+<main class="maquinas-container">
+    <form action="reportar_falla.php" method="POST" class="form-container">
         <label for="id_reporte">ID Reporte:</label>
         <input type="text" id="id_reporte" name="id_reporte" required><br>
 
@@ -77,7 +79,7 @@
         <input type="text" id="reportado_por" name="reportado_por" required><br>
 
         <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required></textarea><br>
+        <textarea id="descripcion" name="descripcion" required style="max-height: 150px; min-height: 100px; resize: vertical;"></textarea><br>
 
         <label for="severidad">Severidad:</label>
         <select id="severidad" name="severidad" required>
@@ -94,9 +96,11 @@
         </select><br>
 
         <label for="acciones">Acciones:</label>
-        <textarea id="acciones" name="acciones"></textarea><br>
+        <textarea id="acciones" name="acciones" style="max-height: 150px; min-height: 100px; resize: vertical;"></textarea><br>
 
         <input type="submit" value="Enviar Reporte">
     </form>
+</main>
+
 </body>
 </html>

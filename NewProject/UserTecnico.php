@@ -1,8 +1,13 @@
 <?php
     include 'includes/header.php';
-    require "../NewProject/includes/config/database.php";
         
-    $db = conectarDB();
+    $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+
+    if (!$conexion) {
+        die("Error en la conexión: " . mysqli_connect_error());
+    } else {
+        echo "";
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $_POST['name'];
@@ -15,7 +20,7 @@
         $specialty = $_POST['specialty'];
         
         $sql = "INSERT INTO technician (name, lastName, secLastName, numTel, email, specialty, user, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $stmt = $conexion->prepare($sql);
         $stmt->bind_param("ssssssss", $name, $lastName, $secLastName, $numTel, $email, $specialty, $user, $password);
         
         if ($stmt->execute()) {
@@ -27,8 +32,8 @@
     }
 ?>
 <main class="maquinas-container">
-        <form id="register-tecnico-form" action="insert_tecnico.php" method="POST" class="form-container">
-            <h2>Formulario de Registro de Técnico</h2>
+        <form id="register-tecnico-form" action="UserTecnico.php" method="POST" class="form-container">
+            <h2>Registro de Técnicos</h2>
 
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required placeholder="Ingrese el nombre">
@@ -54,7 +59,7 @@
             <label for="specialty">Especialidad:</label>
             <input type="text" id="specialty" name="specialty" required placeholder="Ingrese la especialidad del técnico">
 
-            <button type="submit">Registrar Técnico</button>
+            <button type="submit" name="submit">Registrar Técnico</button>
         </form>
     </main>
 </body>

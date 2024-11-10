@@ -1,14 +1,15 @@
 <?php
+$servername = "127.0.0.1";
+$user = "root";
+$password = "";
+$database = "industrial_maintenance";
 
-    function conectarDB(): mysqli{
-        $db = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance", 3306);
 
-        if($db){
-            
-        } else{
-            echo "Conexion fallida";
-        }
-        return $db;
-    }
+$conexion = mysqli_connect($servername, $user, $password, $database);
 
+if (!$conexion) {
+    die("Error al conectar: " . mysqli_connect_error());
+}
+echo "Conexion exitosa";
+mysqli_close($conexion);
 ?>

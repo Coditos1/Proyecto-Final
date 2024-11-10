@@ -1,8 +1,13 @@
 <?php
     include 'includes/header.php';
-    require "../NewProject/includes/config/database.php";
 
-    $db = conectarDB();
+    $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+
+    if (!$conexion) {
+        die("Error en la conexión: " . mysqli_connect_error());
+    } else {
+        echo "";
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $_POST['name'];
@@ -14,16 +19,16 @@
         $password = $_POST['password'];
         
         $sql = "INSERT INTO operator (name, lastName, secLastName, numTel, email, user, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $stmt = $conexion->prepare($sql);
         
         if ($stmt === false) {
-            die("Error en la preparación de la consulta: " . $conn->error);
+            die("Error en la preparación de la consulta: " . $conexion->error);
         }
         
         $stmt->bind_param("sssssss", $name, $lastName, $secLastName, $numTel, $email, $user, $password);
         
         if ($stmt->execute()) {
-            echo "Nuevo operador registrado exitosamente.";
+            echo "Nuevo Operador Registrado";
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -32,7 +37,7 @@
 ?>
     <main class="maquinas-container">
         <form id="register-operator-form" action="UserOperador.php" method="POST" class="form-container">
-            <h2>Formulario de Registro de Operador</h2>
+            <h2>Registro de Operadores</h2>
 
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required placeholder="Ingrese el nombre">
@@ -55,7 +60,7 @@
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required placeholder="Ingrese la contraseña">
 
-            <button type="submit">Registrar Operador</button>
+            <button type="submit" name="submit">Registrar Operador</button>
         </form>
     </main>
 </body>

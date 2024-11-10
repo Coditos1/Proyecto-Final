@@ -1,8 +1,13 @@
 <?php
     include 'includes/header.php';
-    require "../NewProject/includes/config/database.php";
     
-    $db = conectarDB();
+    $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+
+    if (!$conexion) {
+        die("Error en la conexión: " . mysqli_connect_error());
+    } else {
+        echo "";
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $_POST['name'];
@@ -15,44 +20,42 @@
         
 
         $sql = "INSERT INTO supervisor (name, lastName, secLastName, numTel, email, user, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $stmt = $conexion->prepare($sql);
         $stmt->bind_param("sssssss", $name, $lastName, $secLastName, $numTel, $email, $user, $password);
         
         if ($stmt->execute()) {
-            echo "Nuevo supervisor registrado exitosamente.";
+            echo "Nuevo Supervisor Registrado";
         } else {
             echo "Error: " . $stmt->error;
         }
-        
-
     }
 ?>
 <main class="maquinas-container">
         <form id="register-supervisor-form" action="UserSupervisor.php" method="POST" class="form-container">
-            <h2>Formulario de Registro de Supervisor</h2>
+            <h2>Supervisor Registration</h2>
 
-            <label for="name">Nombre:</label>
-            <input type="text" id="name" name="name" required placeholder="Ingrese el nombre">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required placeholder="Enter name">
 
-            <label for="lastName">Apellido Paterno:</label>
-            <input type="text" id="lastName" name="lastName" required placeholder="Ingrese el apellido paterno">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
 
-            <label for="secLastName">Apellido Materno:</label>
-            <input type="text" id="secLastName" name="secLastName" placeholder="Ingrese el apellido materno">
+            <label for="secLastName">Second Last Name:</label>
+            <input type="text" id="secLastName" name="secLastName" placeholder="Enter second last name">
 
-            <label for="numTel">Número de Teléfono:</label>
-            <input type="text" id="numTel" name="numTel" required placeholder="Ingrese el número de teléfono">
+            <label for="numTel">Phone Number:</label>
+            <input type="text" id="numTel" name="numTel" required placeholder="Enter phone number">
 
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" required placeholder="Ingrese el correo electrónico">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required placeholder="Enter email">
 
-            <label for="user">Usuario:</label>
-            <input type="text" id="user" name="user" required placeholder="Ingrese el nombre de usuario">
+            <label for="user">Username:</label>
+            <input type="text" id="user" name="user" required placeholder="Enter username">
 
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required placeholder="Ingrese la contraseña">
+            <label for="password">Password:</label>
+            <input type="text" id="password" name="password" required placeholder="Enter password">
 
-            <button type="submit">Registrar Supervisor</button>
+            <button type="submit" name="submit">Register Supervisor</button>
         </form>
     </main>
 </body>

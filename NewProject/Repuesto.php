@@ -2,22 +2,22 @@
 
     <main class="compra-repuestos-container">
         <section class="form-container">
-            <h2>Formulario de Compra de Repuestos</h2>
+            <h2>Spare Parts Purchase Form</h2>
             <form id="compra-repuestos-form">
-                <label for="nombre-repuesto">Nombre del Repuesto:</label>
-                <input type="text" id="nombre-repuesto" name="nombre-repuesto" required placeholder="Ingrese el nombre del repuesto">
+                <label for="nombre-repuesto">Spare Part Name:</label>
+                <input type="text" id="nombre-repuesto" name="nombre-repuesto" required placeholder="Enter the spare part name">
 
-                <label for="precio">Precio:</label>
-                <input type="number" id="precio" name="precio" required placeholder="Ingrese el precio" step="0.01">
+                <label for="precio">Price:</label>
+                <input type="number" id="precio" name="precio" required placeholder="Enter the price" step="0.01">
 
                 <label for="stock">Stock:</label>
-                <input type="number" id="stock" name="stock" required placeholder="Ingrese la cantidad en stock">
+                <input type="number" id="stock" name="stock" required placeholder="Enter the quantity in stock">
 
-                <label for="proveedor">Proveedor:</label>
-                <input type="text" id="proveedor" name="proveedor" required placeholder="Ingrese el nombre del proveedor">
+                <label for="proveedor">Supplier:</label>
+                <input type="text" id="proveedor" name="proveedor" required placeholder="Enter the supplier's name">
 
                 <button type="submit">
-                    <i></i> Realizar Compra
+                    <i></i> Make Purchase
                 </button>
             </form>
         </section>
