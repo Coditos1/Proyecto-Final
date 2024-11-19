@@ -734,6 +734,7 @@ INSERT INTO equipment_technician (equipment, technician) VALUES
 
 
 
+
 -- Insertar registros en la tabla failure_equipment
 INSERT INTO failure_equipment (equipment, failure) VALUES 
 -- Fallas relacionadas con motores y sistemas eléctricos
@@ -873,3 +874,19 @@ INSERT INTO spare_history (spare_parts, maintenance_history, usedQuantity, usage
 (25, 10, 5, '2024-02-22'), -- Conectores Eléctricos
 (16, 10, 1, '2024-02-22'), -- Placa de Circuito
 (20, 10, 2, '2024-02-22'); -- Batería de Respaldo
+
+SELECT e.type AS equipment_type, AVG(TIMESTAMPDIFF(DAY, f1.date, f2.date)) AS avg_days_between_failures
+FROM failure f1
+JOIN failure f2 ON f1.equipment = f2.equipment AND f1.date < f2.date
+JOIN equipment e ON f1.equipment = e.id
+GROUP BY e.type;
+
+SELECT e.name AS equipment_name, COUNT(f.id) AS total_failures, 
+       GROUP_CONCAT(DISTINCT mh.completionDate ORDER BY mh.completionDate DESC SEPARATOR ', ') AS maintenance_dates
+FROM equipment e
+LEFT JOIN failure f ON e.id = f.equipment
+LEFT JOIN maintenance_history mh ON e.id = mh.equipment
+GROUP BY e.id
+ORDER BY total_failures DESC
+LIMIT 1;
+

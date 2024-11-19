@@ -1,0 +1,146 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #333333, #1a1a1a);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: linear-gradient(135deg, #1a1a1a, #333333);
+    color: #ff6f20;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    transform: translateY(-2px);
+}
+
+main {
+    margin-left: 250px; /* Espacio para la barra lateral */
+    padding: 20px;
+    flex-grow: 1;
+}
+
+h2 {
+    text-align: center; /* Centrar el título */
+    color: #333; /* Color del texto */
+}
+
+#ordenes {
+    width: 1200px; /* Ancho máximo de la tabla */
+    margin: 20px auto; /* Centrar la tabla horizontalmente */
+    margin-left: 425px;
+    padding: 20px; /* Espaciado interno */
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+    overflow-x: auto; /* Habilitar scroll horizontal */
+    display: flex; /* Usar flexbox para centrar el contenido */
+    flex-direction: column; /* Colocar los elementos en columna */
+    align-items: center; /* Centrar los elementos horizontalmente */
+}
+
+table {
+    width: 100%; /* Ancho completo */
+    min-width: 800px; /* Ancho mínimo para la tabla */
+    border-collapse: collapse; /* Colapsar bordes */
+}
+
+th, td {
+    padding: 12px; /* Espaciado interno */
+    text-align: left; /* Alinear texto a la izquierda */
+    border: 1px solid #ddd; /* Borde gris claro */
+}
+
+th {
+    background-color: #f2f2f2; /* Fondo gris claro para encabezados */
+    font-weight: bold; /* Negrita para encabezados */
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Fondo gris claro para filas pares */
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* Color de fondo al pasar el mouse sobre la fila */
+}
+
+#reporte-mantenimiento {
+    background-color: #f9f9f9; /* Color de fondo */
+    padding: 30px; /* Aumentar espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+    margin-top: 50px;
+    margin-left: 450px;
+    align-items: center;
+    width: 60%; /* Aumentar ancho horizontalmente */
+    height: auto; /* Ajustar altura automáticamente */
+}
+
+#reporte-mantenimiento h2 {
+    color: #333; /* Color del título */
+    font-size: 24px; /* Tamaño de fuente */
+    margin-bottom: 15px; /* Espaciado inferior */
+}
+
+#reporte-mantenimiento label {
+    display: block; /* Mostrar etiquetas en bloque */
+    margin-top: 10px; /* Espaciado superior */
+    font-weight: bold; /* Negrita */
+}
+
+#reporte-mantenimiento input,
+#reporte-mantenimiento select,
+#reporte-mantenimiento textarea {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    margin-top: 5px; /* Espaciado superior */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 4px; /* Bordes redondeados */
+    resize: none; /* Deshabilitar el cambio de tamaño */
+}
+
+#reporte-mantenimiento button {
+    background-color: #007bff; /* Color de fondo del botón */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar */
+    margin-top: 10px;
+}
+
+#reporte-mantenimiento button:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el mouse */
+}

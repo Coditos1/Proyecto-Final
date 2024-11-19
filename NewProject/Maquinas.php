@@ -53,7 +53,21 @@
             </select>
 
             <label for="equipment_location">Equipment Location:</label>
-            <input type="text" id="equipment-location" name="equipment_location" required placeholder="Enter the equipment location">
+            <select id="equipment-location" name="equipment_location" required>
+            <option value="">Select equipment location</option>
+            <?php
+                $sql_location = "SELECT id_location, name FROM equipment_location";
+                $result_location = $conexion->query($sql_location);
+
+                if ($result_location->num_rows > 0) {
+                    while ($row = $result_location->fetch_assoc()) {
+                        echo "<option value='" . $row['id_location'] . "'>" . $row['name'] . "</option>";
+                    }
+                } else {
+                    echo "<option value=''>No locations available</option>";
+                }
+            ?>
+        </select>
 
             <button type="submit" id="submit-button" name="submit">Register Machine</button>
         </form>

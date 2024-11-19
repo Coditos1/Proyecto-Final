@@ -14,9 +14,15 @@
         $lastName = $_POST['lastName'];
         $secLastName = $_POST['secLastName'];
         $numTel = $_POST['numTel'];
-        $email = $_POST['email'];
-        $user = $_POST['user'];
-        $password = $_POST['password'];
+
+
+        $email = strtolower($name . '.' . $lastName . $randomNumbers . '@autoindustry.com');
+    
+        // Generar usuario automáticamente (primera letra del nombre + apellido)
+        $user = strtolower(substr($name, 0, 1) . $lastName . $randomNumbers);
+    
+        // Generar contraseña aleatoria de 8 caracteres
+        $password = substr(md5(uniqid()), 0, 8);
         
 
         $sql = "INSERT INTO supervisor (name, lastName, secLastName, numTel, email, user, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -45,15 +51,6 @@
 
             <label for="numTel">Phone Number:</label>
             <input type="text" id="numTel" name="numTel" required placeholder="Enter phone number">
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required placeholder="Enter email">
-
-            <label for="user">Username:</label>
-            <input type="text" id="user" name="user" required placeholder="Enter username">
-
-            <label for="password">Password:</label>
-            <input type="text" id="password" name="password" required placeholder="Enter password">
 
             <button type="submit" name="submit">Register Supervisor</button>
         </form>

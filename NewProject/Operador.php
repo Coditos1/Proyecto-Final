@@ -1,31 +1,97 @@
+<?php
+        $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+
+        if (!$conexion) {
+            die("Error en la conexión: " . mysqli_connect_error());
+        } else {
+            echo "";
+        }
+   
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         
+            $fecha = $_POST['fecha'];
+            $descripcion = $_POST['descripcion'];
+            $equipo_id = $_POST['equipo'];
+    
+          
+            session_start();
+            $operador_id = $_SESSION['operador_id']; 
+    
+        
+            $sql_failure = "INSERT INTO failure (date, description, operator) VALUES (?, ?, ?)"; //PENDIENTE INGRESAR ID CON CREDENCIAL DE INCIO DE SESION
+            $stmt = $conexion->prepare($sql_failure);
+            $stmt->bind_param("ssi", $fecha, $descripcion, $operador_id);
+    
+            if ($stmt->execute()) {
+                $failure_id = $conexion->insert_id;
+    
+                $sql_equipment = "INSERT INTO failure_equipment (failure_id, equipment_id) VALUES (?, ?)";
+                $stmt_equipment = $conexion->prepare($sql_equipment);
+                $stmt_equipment->bind_param("ii", $failure_id, $equipo_id);
+    
+                if ($stmt_equipment->execute()) {
+                    echo "<div class='alert alert-success mt-3'>Reporte enviado exitosamente.</div>";
+                } else {
+                    echo "<div class='alert alert-danger mt-3'>Error al registrar el equipo: " . $stmt_equipment->error . "</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger mt-3'>Error al registrar la falla: " . $stmt->error . "</div>";
+            }
+    
+
+            $stmt->close();
+            $stmt_equipment->close();
+        }
+    
+        $conexion->close();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operador</title>
-    <link rel="stylesheet" href="css/maquinas.css">
+    <link rel="stylesheet" href="includes/statics/css/bootstrap.min.css">
 </head>
 <body>
-    <main class="maquinas-container">
-        <form id="register-operator-form" action="UserOperador.php" method="POST" class="form-container">
-            <h2>Report Failure</h2>
+    <div class="container mt-5">
+        <h2>Reporte de Fallas</h2>
+        <form action="Operador.php" method="POST">
+            <div class="form-group">
+                <label for="fecha">Fecha de Reporte:</label>
+                <input type="date" class="form-control" id="fecha" name="fecha" required>
+            </div>
+            <div class="form-group">
+                <label for="descripcion">Descripción de la Falla:</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="equipo">Equipo Afectado:</label>
+                <select class="form-control" id="equipo" name="equipo" required>
+                    <?php
+                            $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
-            <label for="equipo">Equipment:</label>
-            <select id="Equipo" name="Equipo" required>
-                <option value="terreneitor">Terreneitor</option>
-                <option value="PBR-31">PBR-1</option>
-                <option value="PBE-48">PBE-48</option>
-            </select><br>
+                            if (!$conexion) {
+                                die("Error en la conexión: " . mysqli_connect_error());
+                            } else {
+                                echo "";
+                            }
+                        $sql_equipo = "SELECT id_equipment, name FROM equipment WHERE status = 'Operativo'"; // Asegúrate de que la tabla y los campos sean correctos
+                        $result = $conexion->query($sql_equipo);
 
-            <label for="fecha">Date:</label>
-            <input type="date" id="fecha" name="fecha" required><br>
-
-            <label for="descripcion">Description:</label>
-            <textarea id="descripcion" name="descripcion" required style="max-height: 150px; min-height: 100px; resize: vertical;" placeholder="Enter a description of the failure..."></textarea><br>
-
-            <button type="submit" name="submit">Submit Report</button>
+                        if ($result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) {
+                                echo "<option value='" . $row['id_equipment'] . "'>" . $row['name'] . "</option>";
+                            }
+                        } else {
+                            echo "<option value=''>No hay equipos disponibles</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar Reporte</button>
         </form>
-    </main>
+    </div>
 </body>
 </html>

@@ -27,8 +27,8 @@ header .container {
     align-items: center;
 }
 
-header h1 a {
-    color: #fff;
+header h1 {
+    color: white;
     text-decoration: none;
     font-size: 24px;
 }
@@ -43,7 +43,7 @@ header nav ul li {
 }
 
 header nav ul li a {
-    color: #fff;
+    color: #ff7d33;
     text-decoration: none;
     font-size: 16px;
 }
@@ -68,7 +68,7 @@ main {
 }
 
 .intro h1 {
-    color: #28a745; /* Color para el título principal */
+    color: #ff7d33; /* Color para el título principal */
     margin-bottom: 20px;
 }
 
@@ -77,7 +77,7 @@ main {
 }
 
 .intro h2 {
-    color: #28a745;
+    color: #ff7d33;
     margin-bottom: 20px;
 }
 
@@ -114,7 +114,7 @@ main {
 }
 
 .user-type h3 {
-    color: #28a745; /* Verde para los títulos */
+    color: #ff7d33; /* Verde para los títulos */
     margin-bottom: 15px;
 }
 
@@ -132,7 +132,7 @@ main {
 }
 
 .advantages h2 {
-    color: #28a745;
+    color: #ff7d33;
     margin-bottom: 20px;
 }
 
@@ -160,7 +160,7 @@ main {
 }
 
 .testimonials h2 {
-    color: #28a745;
+    color: #ff7d33;
     margin-bottom: 20px;
 }
 

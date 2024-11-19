@@ -11,7 +11,7 @@
     <!-- Header -->
     <header>
         <div class="container">
-            <h1><a href="#">Sistema de Gestión de Mantenimiento Industrial</a></h1>
+            <h1>Sistema de Gestión de Mantenimiento Industrial</h1>
             <nav>
                 <ul>
                     <li><a href="loggin.php"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</a></li>
