@@ -102,11 +102,9 @@ CREATE TABLE work_orders(
     equipment INT NOT NULL,
     administrator INT NOT NULL,
     technician INT NOT NULL,
-    id_user INT NOT NULL,
     FOREIGN KEY (equipment) REFERENCES equipment(id_equipment),
     FOREIGN KEY (administrator) REFERENCES administrator(id_administrator),
-    FOREIGN KEY (technician) REFERENCES technician(id_technician),
-    FOREIGN KEY (id_user) REFERENCES administrator(id_administrator)
+    FOREIGN KEY (technician) REFERENCES technician(id_technician)
 )
 
 

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($
 
     // Intentar comprobar en la tabla de supervisores
     try {
-        $stmt = mysqli_prepare($conexion, "SELECT id_supervisor, user FROM supervisor WHERE user = ? AND password = ?");
+        $stmt = mysqli_prepare($conexion, "SELECT id_administrator, user FROM administrator WHERE user = ? AND password = ?");
         mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contraseña);
         mysqli_stmt_execute($stmt);
         $resultado = mysqli_stmt_get_result($stmt);
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($
         if (mysqli_num_rows($resultado) > 0) {
             $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
-            $_SESSION['id_user'] = $row['id_supervisor']; // Almacenar el ID del supervisor en la sesión
+            $_SESSION['id_user'] = $row['id_administrator']; // Almacenar el ID del supervisor en la sesión
             header("Location: Supervisor.php");
             exit();
         }

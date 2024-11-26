@@ -9,7 +9,7 @@ if (!$conexion) {
 
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['id_user'])) {
-    echo "<div class='alert alert-danger'>Error: Supervisor ID not found in session. Please log in.</div>";
+    echo "<div class='alert alert-danger'>Error: Administrator ID not found in session. Please log in.</div>";
     exit();
 }
 
@@ -21,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $descripcion = $_POST['descripcion'];
 
     // Obtener el ID del supervisor desde la sesión
-    $supervisor_id = $_SESSION['id_user']; 
+    $administrator_id = $_SESSION['id_user']; 
 
     // Preparar la consulta para insertar la orden de trabajo
-    $sql_work_order = "INSERT INTO work_orders (description, equipment, technician, supervisor, status, id_user, creationDate) VALUES (?, ?, ?, ?, 'Pendiente', ?, NOW())";
+    $sql_work_order = "INSERT INTO work_orders (description, equipment, technician, administrator, status, id_user, creationDate) VALUES (?, ?, ?, ?, 'Pendiente', ?, NOW())";
     $stmt_work_order = $conexion->prepare($sql_work_order);
 
     // Verificar si la preparación de la consulta fue exitosa
