@@ -1,5 +1,13 @@
 <?php
 include 'includes/tecnav.php';
+session_start();
+
+if (!isset($_SESSION['id_user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['id_user'];
 
 $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
@@ -7,12 +15,12 @@ if (!$conexion) {
     die("Error en la conexión: " . mysqli_connect_error());
 }
 
-session_start();
-
 $sql_ordenes = "SELECT wo.id_workOrders AS id_order, wo.creationDate AS assigned_date, wo.description, wo.status, e.name AS equipment_name 
                 FROM work_orders wo 
-                JOIN equipment e ON wo.equipment = e.id_equipment";
+                JOIN equipment e ON wo.equipment = e.id_equipment
+                WHERE wo.id_user = ? AND wo.status = 'Pendiente'";
 $stmt_ordenes = $conexion->prepare($sql_ordenes);
+$stmt_ordenes->bind_param("i", $user_id);
 $stmt_ordenes->execute();
 $result_ordenes = $stmt_ordenes->get_result();
 ?>

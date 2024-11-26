@@ -18,40 +18,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($
 
     // Intentar comprobar en la tabla de supervisores
     try {
-        $stmt = mysqli_prepare($conexion, "SELECT * FROM supervisor WHERE user = ? AND password = ?");
+        $stmt = mysqli_prepare($conexion, "SELECT id_supervisor, user FROM supervisor WHERE user = ? AND password = ?");
         mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contraseña);
         mysqli_stmt_execute($stmt);
         $resultado = mysqli_stmt_get_result($stmt);
 
         // Verificar si se encontró un supervisor
         if (mysqli_num_rows($resultado) > 0) {
+            $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
+            $_SESSION['id_user'] = $row['id_supervisor']; // Almacenar el ID del supervisor en la sesión
             header("Location: Supervisor.php");
             exit();
         }
 
         // Comprobar en la tabla de operadores
-        $stmt = mysqli_prepare($conexion, "SELECT * FROM operator WHERE user = ? AND password = ?");
+        $stmt = mysqli_prepare($conexion, "SELECT id_operator, user FROM operator WHERE user = ? AND password = ?");
         mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contraseña);
         mysqli_stmt_execute($stmt);
         $resultado = mysqli_stmt_get_result($stmt);
 
         // Verificar si se encontró un operador
         if (mysqli_num_rows($resultado) > 0) {
+            $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
+            $_SESSION['id_user'] = $row['id_operator']; // Almacenar el ID del operador en la sesión
             header("Location: Operador.php");
             exit();
         }
 
         // Comprobar en la tabla de técnicos
-        $stmt = mysqli_prepare($conexion, "SELECT * FROM technician WHERE user = ? AND password = ?");
+        $stmt = mysqli_prepare($conexion, "SELECT id_technician, user FROM technician WHERE user = ? AND password = ?");
         mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contraseña);
         mysqli_stmt_execute($stmt);
         $resultado = mysqli_stmt_get_result($stmt);
 
         // Verificar si se encontró un técnico
         if (mysqli_num_rows($resultado) > 0) {
+            $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
+            $_SESSION['id_user'] = $row['id_technician']; // Almacenar el ID del técnico en la sesión
             header("Location: Tecnico.php");
             exit();
         }

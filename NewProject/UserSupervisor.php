@@ -25,7 +25,7 @@
         $password = substr(md5(uniqid()), 0, 8);
         
 
-        $sql = "INSERT INTO supervisor (name, lastName, secLastName, numTel, email, user, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "CALL RegisterSupervisor(?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("sssssss", $name, $lastName, $secLastName, $numTel, $email, $user, $password);
         

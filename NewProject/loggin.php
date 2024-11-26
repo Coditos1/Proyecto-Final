@@ -24,21 +24,21 @@
 <div class="container vh-100 d-flex align-items-center justify-content-center">
         <div class="row shadow-lg p-4 rounded-4">
             <div class="col-md-6 bg-light p-4 rounded-start d-flex flex-column justify-content-center">
-                <h2 class="mb-3">Bienvenido</h2>
+                <h2 class="mb-3">Welcome</h2>
                 <p>
-                    Este es el sistema de Gestión de Mantenimiento Industrial. 
-                    Accede para programar, administrar y supervisar tus mantenimientos.
+                    This is the Industrial Maintenance Management system.
+                    Access to schedule, manage and monitor your maintenance.
                 </p>
-                <p><strong>¿Qué ofrecemos?</strong></p>
+                <p><strong>What do we offer?</strong></p>
                 <ul>
-                    <li>Gestión de equipos.</li>
-                    <li>Programación de mantenimientos preventivos.</li>
-                    <li>Reportes personalizados.</li>
+                    <li>Equipment management.</li>
+                    <li>Preventive maintenance scheduling.</li>
+                    <li>Customized reports.</li>
                 </ul>
             </div>
             <!-- Formulario de Login -->
             <div class="col-md-6 p-4">
-                <h3 class="text-center mb-4">Iniciar Sesión</h3>
+                <h3 class="text-center mb-4">Log In</h3>
                 <form method="post" action="login.php">
                     <div class="mb-3">
                         <label for="usuario" class="form-label">Username</label>

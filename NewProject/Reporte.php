@@ -10,7 +10,8 @@
     }
 
    
-    $selected_severity = isset($_POST['filtro_severidad']) ? $_POST['filtro_severidad'] : '';
+    $selected_date_order = isset($_POST['filtro_fecha']) ? $_POST['filtro_fecha'] : '';
+    $search_operator = isset($_POST['search_operator']) ? $_POST['search_operator'] : '';
 
    
     $sql = "SELECT f.id_failure, f.date, f.description, o.name AS reported_by
@@ -18,8 +19,21 @@
             JOIN operator o ON f.operator = o.id_operator";
 
    
-    if ($selected_severity) {
-        $sql .= " WHERE f.severity = '$selected_severity'";
+    $conditions = [];
+    if ($search_operator) {
+        $conditions[] = "o.name LIKE '%$search_operator%'";
+    }
+
+    if (count($conditions) > 0) {
+        $sql .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    if ($selected_date_order) {
+        if ($selected_date_order == 'antigua') {
+            $sql .= " ORDER BY f.date ASC";
+        } else {
+            $sql .= " ORDER BY f.date DESC";
+        }
     }
 
     $result = $conexion->query($sql);
@@ -41,26 +55,77 @@
 
     <style>
         .btn-accion {
-            padding: 5px 10px;
+            padding: 10px 15px;
             font-size: 12px;
-            margin: 2px; 
+            margin-left: 10px;
             cursor: pointer;
             width: 100px;
-            height: 50px;
+            height: auto;
             vertical-align: middle;
+            background-color: #ff7f50; /* Orange color */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .btn-accion:hover {
+            background-color: #e76a3c; /* Darker orange on hover */
+        }
+
+        .filtros {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filtros input[type="text"] {
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px; /* Adjust width as needed */
+        }
+
+        .filtro-fecha {
+            margin-left: 10px;
+        }
+
+        .tabla-container {
+            max-height: 75vh; /* Increase max height of the table container */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+            margin-top: 20px; /* Top margin to separate from filters */
+        }
+
+        table {
+            width: 100%; /* Ensure table takes full width of container */
+            border-collapse: collapse; /* Collapse borders for better design */
+        }
+
+        th, td {
+            padding: 10px; /* Internal spacing in cells */
+            padding-left: 70px;
+            text-align: center; /* Center text */
+            border-bottom: 1px solid #ddd; /* Bottom line to separate rows */
+            width: 20%; /* Ensure each column takes 20% of total width */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Background color for headers */
         }
     </style>
     <main class="reporte-container">
         <section class="reportes-tabla">
             <div class="tabla-header">
-                <h2>Historial de Reportes</h2>
+                <h2>Report History</h2>
                 <div class="filtros">
                     <form method="POST">
-                        <select name="filtro_severidad" class="filtro-severidad" onchange="this.form.submit()">
-                            <option value="">Todas las Severidades</option>
-                            <option value="alta" <?php echo ($selected_severity == 'alta') ? 'selected' : ''; ?>>Alta</option>
-                            <option value="media" <?php echo ($selected_severity == 'media') ? 'selected' : ''; ?>>Media</option>
-                            <option value="baja" <?php echo ($selected_severity == 'baja') ? 'selected' : ''; ?>>Baja</option>
+                        <input type="text" name="search_operator" placeholder="Search by operator" value="<?php echo htmlspecialchars($search_operator); ?>" autocomplete="off">
+                        <button type="submit" class="btn-accion">Search</button>
+                        <select name="filtro_fecha" class="filtro-fecha" onchange="this.form.submit()">
+                            <option value="">Sort by Date</option>
+                            <option value="antigua" <?php echo ($selected_date_order == 'antigua') ? 'selected' : ''; ?>>Oldest</option>
+                            <option value="nueva" <?php echo ($selected_date_order == 'nueva') ? 'selected' : ''; ?>>Newest</option>
                         </select>
                     </form>
                 </div>
@@ -70,11 +135,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID de Reporte</th>
-                            <th>Fecha</th>
-                            <th>Descripción</th>
-                            <th>Reportado Por</th>
-                            <th>Acciones</th>
+                            <th>Report ID</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Reported By</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,11 +154,11 @@
                                         <td>
                                             <form method='POST' action='Supervisor.php' style='display:inline;'>
                                                 <input type='hidden' name='id_failure' value='" . $row['id_failure'] . "'>
-                                                <button type='submit' class='btn-accion generar'>Generar Orden</button>
+                                                <button type='submit' class='btn-accion generar'>Generate Order</button>
                                             </form>
                                             <form method='POST' action='Reporte.php' style='display:inline;'>
                                                 <input type='hidden' name='id_failure' value='" . $row['id_failure'] . "'>
-                                                <button type='submit' class='btn-accion eliminar' onclick='return confirm(\"¿Estás seguro de que deseas eliminar este reporte?\");'>Eliminar</button>
+                                                <button type='submit' class='btn-accion eliminar' onclick='return confirm(\"¿Estás seguro de que deseas eliminar este reporte?\");'>Delete</button>
                                             </form>
                                         </td>
                                     </tr>";

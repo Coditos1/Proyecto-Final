@@ -14,19 +14,19 @@ CREATE TABLE operator(
     secLastName VARCHAR (40),
     numTel VARCHAR (15) NOT NULL UNIQUE,
     email VARCHAR (50) NOT NULL UNIQUE,
-    user VARCHAR(30) NOT NULL UNIQUE,
-    password VARCHAR (20) NOT NULL UNIQUE
+    user VARBINARY (30) NOT NULL UNIQUE,
+    password VARBINARY (20) NOT NULL UNIQUE
 )
 
-CREATE TABLE supervisor(
-    id_supervisor INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE administrator(
+    id_administrator INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR (40) NOT NULL,
     lastName VARCHAR (40) NOT NULL,
     secLastName VARCHAR (40),
     numTel VARCHAR (15) NOT NULL UNIQUE,
     email VARCHAR (50) NOT NULL UNIQUE,
-    user VARCHAR(30) NOT NULL UNIQUE,
-    password VARCHAR (20) NOT NULL UNIQUE
+    user VARBINARY (30) NOT NULL UNIQUE,
+    password VARBINARY (20) NOT NULL UNIQUE
 )
 
 CREATE TABLE technician(
@@ -37,8 +37,8 @@ CREATE TABLE technician(
     numTel VARCHAR (15) NOT NULL UNIQUE,
     email VARCHAR (50) NOT NULL UNIQUE,
     specialty VARCHAR (30) NOT NULL,
-    user VARCHAR(30) NOT NULL UNIQUE,
-    password VARCHAR (20) NOT NULL UNIQUE
+    user VARBINARY (30) NOT NULL UNIQUE,
+    password VARBINARY (20) NOT NULL UNIQUE
 )
 
 CREATE TABLE maintenance_types(
@@ -86,26 +86,29 @@ CREATE TABLE failure(
 
 CREATE TABLE purchase_orders(
     id_purchaseOrders INT PRIMARY KEY AUTO_INCREMENT,
-    creationDate DATE NOT NULL,
+    creationDate TIMESTAMP,
     status VARCHAR (40) NOT NULL,
     suppliers INT NOT NULL,
-    supervisor INT NOT NULL,
+    administrator INT NOT NULL,
     FOREIGN KEY (suppliers) REFERENCES suppliers(id_suppliers),
-    FOREIGN KEY (supervisor) REFERENCES supervisor(id_supervisor)
+    FOREIGN KEY (administrator) REFERENCES administrator(id_administrator)
 )
 
 CREATE TABLE work_orders(
     id_workOrders INT PRIMARY KEY AUTO_INCREMENT,
-    creationDate DATE NOT NULL,
+    creationDate TIMESTAMP,
     status VARCHAR (40) NOT NULL,
     description VARCHAR (255) NOT NULL,
     equipment INT NOT NULL,
-    supervisor INT NOT NULL,
+    administrator INT NOT NULL,
     technician INT NOT NULL,
+    id_user INT NOT NULL,
     FOREIGN KEY (equipment) REFERENCES equipment(id_equipment),
-    FOREIGN KEY (supervisor) REFERENCES supervisor(id_supervisor),
-    FOREIGN KEY (technician) REFERENCES technician(id_technician)
+    FOREIGN KEY (administrator) REFERENCES administrator(id_administrator),
+    FOREIGN KEY (technician) REFERENCES technician(id_technician),
+    FOREIGN KEY (id_user) REFERENCES administrator(id_administrator)
 )
+
 
 CREATE TABLE maintenance(
     id_maintenance INT PRIMARY KEY AUTO_INCREMENT,
@@ -128,13 +131,6 @@ CREATE TABLE operator_equipment(
     FOREIGN KEY (operator) REFERENCES operator(id_operator)
 )
 
-CREATE TABLE equipment_technician(
-    equipment INT,
-    technician INT,
-    PRIMARY KEY (equipment, technician),
-    FOREIGN KEY (equipment) REFERENCES equipment(id_equipment),
-    FOREIGN KEY (technician) REFERENCES technician(id_technician)
-)
 
 CREATE TABLE failure_equipment(
     equipment INT,
@@ -178,8 +174,6 @@ CREATE TABLE spare_history(
 
 
 
-
-
 -- Insertar registros en la tabla ubicacion_de_equipos
 INSERT INTO equipment_location (id_location, name) VALUES 
 ('U001', 'Planta de Ensamblaje de Componentes'),
@@ -194,74 +188,74 @@ INSERT INTO equipment_location (id_location, name) VALUES
 
 -- Insertar registros en la tabla operador
 INSERT INTO operator (name, lastName, secLastName, numTel, email, user, password) VALUES 
-('Carlos Andrés', 'Pérez', 'Gómez', '(664) 123 45 67', 'carlos.perez@autoindustry.com', 'c_perez', 'CPerez182'),
-('María José', 'López', NULL, '(664) 234 56 78', 'maria.lopez@autoindustry.com', 'm_lopez', 'MLopez789'),
-('Roberto', 'Sánchez', 'Vega', '(664) 345 67 89', 'roberto.sanchez@autoindustry.com', 'r_sanchez', 'RSanchez456'),
-('Ana', 'Martínez', NULL, '(664) 456 78 90', 'ana.martinez@autoindustry.com', 'ana_m', 'AMartinez654'),
-('Jorge', 'Fernández', 'Ruiz', '(664) 567 89 01', 'jorge.fernandez@autoindustry.com', 'J_fernandez', 'JFernandez123'),
-('Pedro Pablo', 'Gómez', 'Lara', '(664) 678 90 12', 'pedro.gomez@autoindustry.com', 'p_gomez', 'PedroGL789'),
-('Luis', 'Torres', 'Mora', '(664) 789 01 23', 'luis.torres@autoindustry.com', 'l_torres', 'LTorres456'),
-('Verónica', 'Sosa', NULL, '(664) 890 12 34', 'veronica.sosa@autoindustry.com', 'v_sosa', 'VSosa123'),
-('Andrés', 'Castro', 'Reyes', '(664) 901 23 45', 'andres.castro@autoindustry.com', 'a_castro', 'ACastro789'),
-('Sara Isabel', 'Ramírez', 'Fuentes', '(664) 012 34 56', 'sara.ramirez@autoindustry.com', 's_ramirez', 'SRamirez654'),
-('Eduardo', 'Morales', 'Martín', '(664) 019 67 18', 'eduardo.morales@autoindustry.com', 'e_morales', 'EMorales123'),
-('Paula', 'Vargas', NULL, '(664) 235 97 81', 'paula.vargas@autoindustry.com', 'p_vargas', 'PVargas789'),
-('Raúl', 'Ríos', 'Valdez', '(664) 391 10 20', 'raul.rios@autoindustry.com', 'r_rios', 'RRios456'),
-('Isabel', 'Álvarez', 'Campos', '(664) 807 84 95', 'isabel.alvarez@autoindustry.com', 'i_alvarez', 'IAlvarez654'),
-('Hugo', 'Paredes', 'Franco', '(664) 567 02 06', 'hugo.paredes@autoindustry.com', 'h_paredes', 'HParedes789'),
-('Patricia', 'Méndez', NULL, '(664) 710 97 08', 'patricia.mendez@autoindustry.com', 'p_mendez', 'PMendez123'),
-('Adrián', 'Reyes', 'Juárez', '(664) 789 37 74', 'adrian.reyes@autoindustry.com', 'a_reyes', 'AReyes456'),
-('Gloria Elena', 'Cruz', 'Luna', '(664) 890 21 97', 'gloria.cruz@autoindustry.com', 'g_cruz', 'GCruz789'),
-('Javier', 'Silva', 'Ortiz', '(664) 901 23 20', 'javier.silva@autoindustry.com', 'j_silva', 'JSilva654'),
-('Lorena', 'Núñez', NULL, '(664) 012 72 34', 'lorena.nunez@autoindustry.com', 'l_nunez', 'LNunez123'),
-('Miguel Ángel', 'Ibarra', 'Galindo', '(664) 123 31 81', 'miguel.ibarra@autoindustry.com', 'm_ibarra', 'MIbarra789'),
-('Elena', 'Serrano', 'Vargas', '(644) 234 68 25', 'elena.serrano@autoindustry.com', 'e_serrano', 'ESerrano456'),
-('Raquel', 'Aguilar', NULL, '(644) 345 19 31', 'raquel.aguilar@autoindustry.com', 'r_aguilar', 'RAguilar654'),
-('Felipe', 'Lara', 'Espinosa', '(664) 456 78 24', 'felipe.lara@autoindustry.com', 'f_lara', 'FLara789'),
-('Natalia', 'Gutiérrez', 'Suárez', '(664) 567 64 92', 'natalia.gutierrez@autoindustry.com', 'n_gutierrez', 'NGutierrez123'),
-('César', 'Vega', 'Jiménez', '(664) 678 24 16', 'cesar.vega@autoindustry.com', 'c_vega', 'CVega456'),
-('Inés', 'Roldán', NULL, '(664) 789 74 90', 'ines.roldan@autoindustry.com', 'i_roldan', 'IRoldan789'),
-('Héctor', 'Muñoz', 'Beltrán', '(664) 890 64 38', 'hector.munoz@autoindustry.com', 'h_munoz', 'HMunoz654'),
-('Daniela', 'Valle', 'Castillo', '(664) 901 16 25', 'daniela.valle@autoindustry.com', 'd_valle', 'DValle123'),
-('Tomás', 'Moreno', NULL, '(664) 012 79 62', 'tomas.moreno@autoindustry.com', 't_moreno', 'TMoreno789'),
-('Marisol', 'Soto', 'Duarte', '(664) 123 16 64', 'marisol.soto@autoindustry.com', 'm_soto', 'MSoto456'),
-('Gustavo', 'Pérez', 'Villalobos', '(664) 234 37 72', 'gustavo.perez@autoindustry.com', 'g_perez', 'GPerez654'),
-('Silvia', 'Cordero', NULL, '(664) 345 01 61', 'silvia.cordero@autoindustry.com', 's_cordero', 'SCordero789'),
-('Rodrigo', 'Escobar', 'Ramos', '(664) 456 90 52', 'rodrigo.escobar@autoindustry.com', 'r_escobar', 'REscobar123'),
-('Monica', 'Peña', 'León', '(664) 567 98 34', 'monica.pena@autoindustry.com', 'm_pena', 'MPena456'),
-('Jonathan', 'Figueroa', 'Salinas', '(664) 678 21 09', 'jonathan.figueroa@autoindustry.com', 'j_figueroa', 'JFigueroa789'),
-('Irene', 'Román', NULL, '(664) 789 11 73', 'irene.roman@autoindustry.com', 'i_roman', 'IRoman654'),
-('Salvador', 'Gallardo', 'Ponce', '(664) 890 01 34', 'salvador.gallardo@autoindustry.com', 's_gallardo', 'SGallardo123');
+('Carlos Andrés', 'Pérez', 'Gómez', '(664) 123 4567', 'carlos.perez@autoindustry.com', 'c_perez', 'CPerez182'),
+('María José', 'López', NULL, '(664) 234 5678', 'maria.lopez@autoindustry.com', 'm_lopez', 'MLopez789'),
+('Roberto', 'Sánchez', 'Vega', '(664) 345 6789', 'roberto.sanchez@autoindustry.com', 'r_sanchez', 'RSanchez456'),
+('Ana', 'Martínez', NULL, '(664) 456 7890', 'ana.martinez@autoindustry.com', 'ana_m', 'AMartinez654'),
+('Jorge', 'Fernández', 'Ruiz', '(664) 567 8901', 'jorge.fernandez@autoindustry.com', 'J_fernandez', 'JFernandez123'),
+('Pedro Pablo', 'Gómez', 'Lara', '(664) 678 9012', 'pedro.gomez@autoindustry.com', 'p_gomez', 'PedroGL789'),
+('Luis', 'Torres', 'Mora', '(664) 789 0123', 'luis.torres@autoindustry.com', 'l_torres', 'LTorres456'),
+('Verónica', 'Sosa', NULL, '(664) 890 1234', 'veronica.sosa@autoindustry.com', 'v_sosa', 'VSosa123'),
+('Andrés', 'Castro', 'Reyes', '(664) 901 2345', 'andres.castro@autoindustry.com', 'a_castro', 'ACastro789'),
+('Sara Isabel', 'Ramírez', 'Fuentes', '(664) 012 3456', 'sara.ramirez@autoindustry.com', 's_ramirez', 'SRamirez654'),
+('Eduardo', 'Morales', 'Martín', '(664) 019 6718', 'eduardo.morales@autoindustry.com', 'e_morales', 'EMorales123'),
+('Paula', 'Vargas', NULL, '(664) 235 9781', 'paula.vargas@autoindustry.com', 'p_vargas', 'PVargas789'),
+('Raúl', 'Ríos', 'Valdez', '(664) 391 1020', 'raul.rios@autoindustry.com', 'r_rios', 'RRios456'),
+('Isabel', 'Álvarez', 'Campos', '(664) 807 8495', 'isabel.alvarez@autoindustry.com', 'i_alvarez', 'IAlvarez654'),
+('Hugo', 'Paredes', 'Franco', '(664) 567 0206', 'hugo.paredes@autoindustry.com', 'h_paredes', 'HParedes789'),
+('Patricia', 'Méndez', NULL, '(664) 710 9708', 'patricia.mendez@autoindustry.com', 'p_mendez', 'PMendez123'),
+('Adrián', 'Reyes', 'Juárez', '(664) 789 3774', 'adrian.reyes@autoindustry.com', 'a_reyes', 'AReyes456'),
+('Gloria Elena', 'Cruz', 'Luna', '(664) 890 2197', 'gloria.cruz@autoindustry.com', 'g_cruz', 'GCruz789'),
+('Javier', 'Silva', 'Ortiz', '(664) 901 2320', 'javier.silva@autoindustry.com', 'j_silva', 'JSilva654'),
+('Lorena', 'Núñez', NULL, '(664) 012 7234', 'lorena.nunez@autoindustry.com', 'l_nunez', 'LNunez123'),
+('Miguel Ángel', 'Ibarra', 'Galindo', '(664) 123 3181', 'miguel.ibarra@autoindustry.com', 'm_ibarra', 'MIbarra789'),
+('Elena', 'Serrano', 'Vargas', '(644) 234 6825', 'elena.serrano@autoindustry.com', 'e_serrano', 'ESerrano456'),
+('Raquel', 'Aguilar', NULL, '(644) 345 1931', 'raquel.aguilar@autoindustry.com', 'r_aguilar', 'RAguilar654'),
+('Felipe', 'Lara', 'Espinosa', '(664) 456 7824', 'felipe.lara@autoindustry.com', 'f_lara', 'FLara789'),
+('Natalia', 'Gutiérrez', 'Suárez', '(664) 567 6492', 'natalia.gutierrez@autoindustry.com', 'n_gutierrez', 'NGutierrez123'),
+('César', 'Vega', 'Jiménez', '(664) 678 2416', 'cesar.vega@autoindustry.com', 'c_vega', 'CVega456'),
+('Inés', 'Roldán', NULL, '(664) 789 7490', 'ines.roldan@autoindustry.com', 'i_roldan', 'IRoldan789'),
+('Héctor', 'Muñoz', 'Beltrán', '(664) 890 6438', 'hector.munoz@autoindustry.com', 'h_munoz', 'HMunoz654'),
+('Daniela', 'Valle', 'Castillo', '(664) 901 1625', 'daniela.valle@autoindustry.com', 'd_valle', 'DValle123'),
+('Tomás', 'Moreno', NULL, '(664) 012 7962', 'tomas.moreno@autoindustry.com', 't_moreno', 'TMoreno789'),
+('Marisol', 'Soto', 'Duarte', '(664) 123 1664', 'marisol.soto@autoindustry.com', 'm_soto', 'MSoto456'),
+('Gustavo', 'Pérez', 'Villalobos', '(664) 234 3772', 'gustavo.perez@autoindustry.com', 'g_perez', 'GPerez654'),
+('Silvia', 'Cordero', NULL, '(664) 345 0161', 'silvia.cordero@autoindustry.com', 's_cordero', 'SCordero789'),
+('Rodrigo', 'Escobar', 'Ramos', '(664) 456 9052', 'rodrigo.escobar@autoindustry.com', 'r_escobar', 'REscobar123'),
+('Monica', 'Peña', 'León', '(664) 567 9834', 'monica.pena@autoindustry.com', 'm_pena', 'MPena456'),
+('Jonathan', 'Figueroa', 'Salinas', '(664) 678 2109', 'jonathan.figueroa@autoindustry.com', 'j_figueroa', 'JFigueroa789'),
+('Irene', 'Román', NULL, '(664) 789 1173', 'irene.roman@autoindustry.com', 'i_roman', 'IRoman654'),
+('Salvador', 'Gallardo', 'Ponce', '(664) 890 0134', 'salvador.gallardo@autoindustry.com', 's_gallardo', 'SGallardo123');
 
 
 
 
 -- Insertar registros en la tabla supervisor
-INSERT INTO supervisor (name, lastName, secLastName, numTel, email, user, password) VALUES 
-('Santiago', 'Méndez', 'Herrera', '(664) 111 17 33', 'santiago.mendez@autoindustry.com', 's_mendez', 'SMendez123'),
-('Lucía', 'García', 'Santos', '(664) 222 37 40', 'lucia.garcia@autoindustry.com', 'l_garcia', 'LGarcia456'),
-('Fernando', 'Castillo', NULL, '(664) 130 44 59', 'fernando.castillo@autoindustry.com', 'f_castillo', 'FCastillo789'),
-('Gabriela', 'Moreno', 'Flores', '(664) 414 51 46', 'gabriela.moreno@autoindustry.com', 'g_moreno', 'GMoreno654'),
-('Ricardo', 'Navarro', 'Guzmán', '(664) 554 12 78', 'ricardo.navarro@autoindustry.com', 'r_navarro', 'RNavarro987'),
-('Diana', 'Serrano', NULL, '(664) 624 34 78', 'diana.serrano@autoindustry.com', 'd_serrano', 'DSerrano321'),
-('Samuel', 'Jiménez', 'Ortiz', '(664) 277 81 99', 'samuel.jimenez@autoindustry.com', 's_jimenez', 'SJimenez123'),
-('Claudia', 'Ávila', 'Pérez', '(644) 825 97 00', 'claudia.avila@autoindustry.com', 'c_avila', 'CAvila456'),
-('Manuel', 'Vargas', 'Sánchez', '(664) 829 00 11', 'manuel.vargas@autoindustry.com', 'm_vargas', 'MVargas789'),
-('Mónica', 'Rojas', 'Díaz', '(664) 027 11 34', 'monica.rojas@autoindustry.com', 'm_rojas', 'MRojas654');
+INSERT INTO administrator (name, lastName, secLastName, numTel, email, user, password) VALUES 
+('Santiago', 'Méndez', 'Herrera', '(664) 111 1733', 'santiago.mendez@autoindustry.com', 's_mendez', 'SMendez123'),
+('Lucía', 'García', 'Santos', '(664) 222 3740', 'lucia.garcia@autoindustry.com', 'l_garcia', 'LGarcia456'),
+('Fernando', 'Castillo', NULL, '(664) 130 4459', 'fernando.castillo@autoindustry.com', 'f_castillo', 'FCastillo789'),
+('Gabriela', 'Moreno', 'Flores', '(664) 414 5146', 'gabriela.moreno@autoindustry.com', 'g_moreno', 'GMoreno654'),
+('Ricardo', 'Navarro', 'Guzmán', '(664) 554 1278', 'ricardo.navarro@autoindustry.com', 'r_navarro', 'RNavarro987'),
+('Diana', 'Serrano', NULL, '(664) 624 3478', 'diana.serrano@autoindustry.com', 'd_serrano', 'DSerrano321'),
+('Samuel', 'Jiménez', 'Ortiz', '(664) 277 8199', 'samuel.jimenez@autoindustry.com', 's_jimenez', 'SJimenez123'),
+('Claudia', 'Ávila', 'Pérez', '(644) 825 9700', 'claudia.avila@autoindustry.com', 'c_avila', 'CAvila456'),
+('Manuel', 'Vargas', 'Sánchez', '(664) 829 0011', 'manuel.vargas@autoindustry.com', 'm_vargas', 'MVargas789'),
+('Mónica', 'Rojas', 'Díaz', '(664) 027 1134', 'monica.rojas@autoindustry.com', 'm_rojas', 'MRojas654');
 
 
 
 -- Insertar registros en la tabla tecnico
 INSERT INTO technician (name, lastName, secLastName, numTel, email, specialty, user, password) VALUES 
-('Juan', 'Martínez', 'González', '(664) 123 45 67', 'juan.martinez@autoindustry.com', 'Mantenimiento de Equipos Industriales', 'j_martinez', 'JMartinez456'),
-('Ana', 'López', 'Hernández', '(664) 234 56 78', 'ana.lopez@autoindustry.com', 'Mantenimiento de Sistemas Mecánicos', 'a_lopez', 'ALopez812'),
-('Pedro', 'García', 'Ramírez', '(664) 345 67 89', 'pedro.garcia@autoindustry.com', 'Mantenimiento de Sistemas Electrónicos', 'p_garcia', 'PGarcia378'),
-('María', 'Fernández', 'Sánchez', '(664) 456 78 90', 'maria.fernandez@autoindustry.com', 'Mantenimiento de Equipos de Pintura', 'm_fernandez', 'MFernandez903'),
-('Luis', 'Torres', 'Mora', '(664) 567 89 01', 'luis.torres@autoindustry.com', 'Mantenimiento de Prensas y Herramientas', 'l_torres', 'LTorres680'),
-('Sofía', 'Jiménez', 'Pérez', '(664) 678 90 12', 'sofia.jimenez@autoindustry.com', 'Mantenimiento de Equipos de Medición', 's_jimenez', 'SJimenez236'),
-('Carlos', 'Ramírez', 'Cruz', '(664) 789 01 23', 'carlos.ramirez@autoindustry.com', 'Mantenimiento de Sistemas Hidráulicos', 'c_ramirez', 'CRamirez802'),
-('Elena', 'Serrano', 'Vargas', '(664) 890 12 34', 'elena.serrano@autoindustry.com', 'Mantenimiento de Equipos de Ensayo', 'e_serrano', 'ESerrano203'),
-('Javier', 'Silva', 'Ortiz', '(664) 901 23 45', 'javier.silva@autoindustry.com', 'Mantenimiento de Sistemas de Control', 'j_silva', 'JSilva934');
+('Juan', 'Martínez', 'González', '(664) 123 4567', 'juan.martinez@autoindustry.com', 'Mantenimiento de Equipos Industriales', 'j_martinez', 'JMartinez456'),
+('Ana', 'López', 'Hernández', '(664) 234 5678', 'ana.lopez@autoindustry.com', 'Mantenimiento de Sistemas Mecánicos', 'a_lopez', 'ALopez812'),
+('Pedro', 'García', 'Ramírez', '(664) 345 6789', 'pedro.garcia@autoindustry.com', 'Mantenimiento de Sistemas Electrónicos', 'p_garcia', 'PGarcia378'),
+('María', 'Fernández', 'Sánchez', '(664) 456 7890', 'maria.fernandez@autoindustry.com', 'Mantenimiento de Equipos de Pintura', 'm_fernandez', 'MFernandez903'),
+('Luis', 'Torres', 'Mora', '(664) 567 8901', 'luis.torres@autoindustry.com', 'Mantenimiento de Prensas y Herramientas', 'l_torres', 'LTorres680'),
+('Sofía', 'Jiménez', 'Pérez', '(664) 678 9012', 'sofia.jimenez@autoindustry.com', 'Mantenimiento de Equipos de Medición', 's_jimenez', 'SJimenez236'),
+('Carlos', 'Ramírez', 'Cruz', '(664) 789 0123', 'carlos.ramirez@autoindustry.com', 'Mantenimiento de Sistemas Hidráulicos', 'c_ramirez', 'CRamirez802'),
+('Elena', 'Serrano', 'Vargas', '(664) 890 1234', 'elena.serrano@autoindustry.com', 'Mantenimiento de Equipos de Ensayo', 'e_serrano', 'ESerrano203'),
+('Javier', 'Silva', 'Ortiz', '(664) 901 2345', 'javier.silva@autoindustry.com', 'Mantenimiento de Sistemas de Control', 'j_silva', 'JSilva934');
 
 
 -- Insertar registros en la tabla tipos_de_mantenimiento
@@ -277,13 +271,13 @@ INSERT INTO maintenance_types (name, description) VALUES
 
 -- Insertar registros en la tabla proveedores
 INSERT INTO suppliers (name, numTel, email, addrStreet, addrNum, addrNeigh) VALUES 
-('Repuestos Automotrices del Norte S.A.', '(664) 123 45 67', 'contacto@repuestosnorte.com', 'Avenida Industrial', '101', 'Colonia Industrial'),
-('Herramientas y Equipos S.A. de C.V.', '(664) 234 56 78', 'ventas@herramientasyequipos.com', 'Calle de la Innovación', '202', 'Colonia Tecnológica'),
-('Suministros Automotrices de México', '(664) 345 67 89', 'info@suministrosautomotrices.com', 'Boulevard de la Industria', '303', 'Colonia Progreso'),
-('Mantenimiento y Repuestos S.A.', '(664) 456 78 90', 'soporte@mantenimiento.com', 'Calle de la Calidad', '404', 'Colonia Eficiencia'),
-('Proveedores de Maquinaria y Herramientas', '(664) 567 89 01', 'contacto@maquinariayherramientas.com', 'Calle del Progreso', '505', 'Colonia Avance'),
-('Componentes y Accesorios Automotrices S.A.', '(664) 678 90 12', 'ventas@componentesya.com', 'Calle de la Tecnología', '606', 'Colonia Innovación'),
-('Distribuidora de Equipos Industriales S.A. de C.V.', '(664) 789 01 23', 'info@distribuidoraequipos.com', 'Avenida de la Producción', '707', 'Colonia Desarrollo');
+('Repuestos Automotrices del Norte S.A.', '(664) 123 4567', 'contacto@repuestosnorte.com', 'Avenida Industrial', '101', 'Colonia Industrial'),
+('Herramientas y Equipos S.A. de C.V.', '(664) 234 5678', 'ventas@herramientasyequipos.com', 'Calle de la Innovación', '202', 'Colonia Tecnológica'),
+('Suministros Automotrices de México', '(664) 345 6789', 'info@suministrosautomotrices.com', 'Boulevard de la Industria', '303', 'Colonia Progreso'),
+('Mantenimiento y Repuestos S.A.', '(664) 456 7890', 'soporte@mantenimiento.com', 'Calle de la Calidad', '404', 'Colonia Eficiencia'),
+('Proveedores de Maquinaria y Herramientas', '(664) 567 8901', 'contacto@maquinariayherramientas.com', 'Calle del Progreso', '505', 'Colonia Avance'),
+('Componentes y Accesorios Automotrices S.A.', '(664) 678 9012', 'ventas@componentesya.com', 'Calle de la Tecnología', '606', 'Colonia Innovación'),
+('Distribuidora de Equipos Industriales S.A. de C.V.', '(664) 789 0123', 'info@distribuidoraequipos.com', 'Avenida de la Producción', '707', 'Colonia Desarrollo');
 
 
 -- Insertar registros en la tabla equipos para la Planta de Ensamblaje de Componentes (U001)
@@ -353,7 +347,7 @@ INSERT INTO equipment (name, model, brand, status, equipment_location) VALUES
 ('Compresor de Aire Portátil', 'CAP-5700', 'PortableAir', 'Operativo', 'U009');
 
 
--- Insertar registros en la tabla repuestos para equipos industriales ERORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+-- Insertar registros en la tabla repuestos para equipos industriales
 INSERT INTO spare_parts (name, price, stock, suppliers) VALUES 
 ('Motor Eléctrico', 500.00, 20, 1),
 ('Bomba de Agua', 150.00, 30, 2),
@@ -523,8 +517,8 @@ INSERT INTO failure (date, description, operator) VALUES
 ('2024-09-21', 'Los equipos de medición están desgastados.', 6);
 
 
--- Insertar registros en la tabla ordenes_de_compra ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-INSERT INTO purchase_orders (creationDate, status, suppliers, supervisor) VALUES 
+-- Insertar registros en la tabla ordenes_de_compra
+INSERT INTO purchase_orders (creationDate, status, suppliers, administrator) VALUES 
 ('2024-01-05', 'Completada', 1, 1),
 ('2024-01-10', 'Completada', 2, 2),
 ('2024-01-15', 'Completada', 3, 1),
@@ -550,7 +544,7 @@ INSERT INTO purchase_orders (creationDate, status, suppliers, supervisor) VALUES
 
 
 -- Insertar registros en la tabla ordenes_de_trabajo
-INSERT INTO work_orders (creationDate, status, description, equipment, supervisor, technician) VALUES 
+INSERT INTO work_orders (creationDate, status, description, equipment, administrator, technician) VALUES 
 ('2024-01-05', 'Completada', 'Mantenimiento preventivo de la máquina de ensamblaje.', 1, 1, 1),
 ('2024-01-10', 'Completada', 'Reparación del sistema hidráulico.', 2, 2, 2),
 ('2024-01-15', 'Completada', 'Inspección de la cinta transportadora.', 3, 1, 3),
@@ -680,61 +674,6 @@ INSERT INTO operator_equipment (equipment, operator) VALUES
 (38, 34); -- Operador 34 trabaja en el equipo 38
 
 
--- Insertar registros en la tabla equipment_technician
-INSERT INTO equipment_technician (equipment, technician) VALUES 
--- Juan Martínez - Especialidad: Mantenimiento de Equipos Industriales
-(1, 1),   -- Robot Soldador
-(2, 1),   -- Máquina de Ensamblaje
-(3, 1),   -- Cinta Transportadora
-(4, 1),   -- Elevador Hidráulico
-(5, 1),   -- Robot de Montaje
-(6, 1),   -- Máquina de Corte por Laser
-(16, 2),  -- Máquina de Pruebas de Resistencia
-(17, 2),  -- Cortadora de Plasma
-(18, 2),  -- Máquina de Ensayo de Materiales
-(19, 2),  -- Prensa de Corte
-(20, 2),  -- Sistema de Refrigeración
-(7, 3),   -- Sistema de Monitoreo de Producción
-(14, 3),  -- Equipo de Medición de Color
-(38, 3),  -- Escáner de Código de Barras
-(39, 3),  -- Sistema de Gestión de Inventario
-(40, 3),  -- Sistema de Pruebas Electrónicas
-(8, 4),   -- Horno de Curado
-(9, 4),   -- Máquina de Pintura Automática
-(10, 4),  -- Robot de Pintura
-(11, 4),  -- Compresora de Aire
-(12, 4),  -- Cabina de Pintura
-(13, 4),  -- Sistema de Ventilación
-(15, 5),  -- Prensa Hidráulica
-(21, 5),  -- Máquina de Corte CNC
-(22, 5),  -- Taladro Industrial
-(55, 5),  -- Herramientas Manuales
-(56, 5),  -- Carro de Herramientas
-(41, 6),  -- Osciloscopio
-(42, 6),  -- Multímetro Digital
-(43, 6),  -- Máquina de Ensayo de Componentes
-(44, 6),  -- Generador de Señales
-(45, 6),  -- Analizador de Espectro
-(23, 7),  -- Robot de Manipulación
-(24, 7),  -- Máquina de Soldadura por Puntos
-(25, 7),  -- Compresor de Tornillo
-(26, 7),  -- Máquina de Acabado
-(27, 7),  -- Sistema de Transporte Neumático
-(46, 8),  -- Máquina de Inspección Visual
-(47, 8),  -- Sistema de Pruebas de Estrés
-(48, 8),  -- Calibrador de Dimensiones
-(49, 8),  -- Máquina de Ensayo de Tensión
-(50, 8),  -- Sistema de Monitoreo de Calidad
-(28, 9),  -- Generador de Vapor
-(29, 9),  -- Sistema de Control de Calidad
-(30, 9),  -- Máquina de Inspección Visual
-(31, 9),  -- Sistema de Pruebas de Estrés
-(32, 9);  -- Calibrador de Dimensiones
-
-
-
-
-
 -- Insertar registros en la tabla failure_equipment
 INSERT INTO failure_equipment (equipment, failure) VALUES 
 -- Fallas relacionadas con motores y sistemas eléctricos
@@ -771,7 +710,7 @@ INSERT INTO failure_equipment (equipment, failure) VALUES
 
 
 
--- Insertar registros en la tabla spare_purchases ERROOOOOOOOOOOOOOOOORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+-- Insertar registros en la tabla spare_purchases
 INSERT INTO spare_purchases (spare_parts, purchase_orders, quantity, amount) VALUES 
 -- Orden de compra 1 - Repuestos Automotrices del Norte S.A.
 (1, 1, 2, 1000.00),   -- 2 Motores Eléctricos
@@ -822,7 +761,7 @@ INSERT INTO spare_purchases (spare_parts, purchase_orders, quantity, amount) VAL
 
 
 
--- Insertar registros en la tabla maintenance_history ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+-- Insertar registros en la tabla maintenance_history
 INSERT INTO maintenance_history (completionDate, results, observations, equipment, maintenance) VALUES 
 ('2024-01-07', 'Exitoso', 'Se completó el mantenimiento preventivo del robot soldador. Todos los componentes funcionan correctamente.', 1, 1),
 ('2024-01-12', 'Exitoso', 'Reparación exitosa de la máquina de ensamblaje. Se reemplazaron las piezas desgastadas.', 2, 2),
@@ -841,7 +780,7 @@ INSERT INTO maintenance_history (completionDate, results, observations, equipmen
 ('2024-04-03', 'Exitoso', 'Calibración completada con éxito. Todas las mediciones dentro de parámetros.', 15, 15);
 
 
--- Insertar registros en la tabla spare_history ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+-- Insertar registros en la tabla spare_history
 INSERT INTO spare_history (spare_parts, maintenance_history, usedQuantity, usageDate) VALUES 
 -- Historial para mantenimiento 1
 (1, 1, 1, '2024-01-07'),   -- Motor Eléctrico
@@ -890,37 +829,13 @@ GROUP BY e.id
 ORDER BY total_failures DESC
 LIMIT 1;
 
-
-CREATE PROCEDURE RegisterOperator(
-    IN p_name VARCHAR(40),
-    IN p_lastName VARCHAR(40),
-    IN p_secLastName VARCHAR(40),
-    IN p_numTel VARCHAR(15),
-    IN p_email VARCHAR(50),
-    IN p_user VARCHAR(30),
-    IN p_password VARCHAR(20)
-)
+CREATE TRIGGER before_insert
+BEFORE INSERT ON operator
+FOR EACH ROW
 BEGIN
-    INSERT INTO operator (name, lastName, secLastName, numTel, email, user, password)
-    VALUES (p_name, p_lastName, p_secLastName, p_numTel, p_email, p_user, p_password);
-END;
-
-
-CREATE PROCEDURE RegisterSupervisor(
-    IN p_name VARCHAR(40),
-    IN p_lastName VARCHAR(40),
-    IN p_secLastName VARCHAR(40),
-    IN p_numTel VARCHAR(15),
-    IN p_email VARCHAR(50),
-    IN p_user VARCHAR(30),
-    IN p_password VARCHAR(20)
-)
-BEGIN
-    INSERT INTO supervisor (name, lastName, secLastName, numTel, email, user, password)
-    VALUES (p_name, p_lastName, p_secLastName, p_numTel, p_email, p_user, p_password);
+SET NEW.password = AES_ENCRYPT(NEW.password, "key");
 END
 
-
-
-
-
+SELECT AES_DECRYPT(password, "key")
+FROM operator
+WHERE id_operator=44

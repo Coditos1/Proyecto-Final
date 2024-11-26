@@ -24,7 +24,7 @@
         // Generar contraseña aleatoria de 8 caracteres
         $password = substr(md5(uniqid()), 0, 8);
 
-        $sql = "INSERT INTO technician (name, lastName, secLastName, numTel, email, specialty, user, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "CALL RegisterTechnician(?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("ssssssss", $name, $lastName, $secLastName, $numTel, $email, $specialty, $user, $password);
         

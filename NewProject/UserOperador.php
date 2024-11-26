@@ -8,26 +8,21 @@
     } else {
         echo "";
     }
-
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $_POST['name'];
         $lastName = $_POST['lastName'];
         $secLastName = $_POST['secLastName'];
         $numTel = $_POST['numTel'];
-        
-
+    
+        // Generar email y usuario automáticamente
         $randomNumbers = rand(1000,9999);
-
-        // Generar email automáticamente
         $email = strtolower($name . '.' . $lastName . $randomNumbers . '@autoindustry.com');
-    
-        // Generar usuario automáticamente (primera letra del nombre + apellido)
         $user = strtolower(substr($name, 0, 1) . $lastName . $randomNumbers);
-    
-        // Generar contraseña aleatoria de 8 caracteres
         $password = substr(md5(uniqid()), 0, 8);
-        
-        $sql = "INSERT INTO operator (name, lastName, secLastName, numTel, email, user, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+        // Llamar al procedimiento almacenado
+        $sql = "CALL RegisterOperator(?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
         
         if ($stmt === false) {
@@ -41,26 +36,25 @@
         } else {
             echo "Error: " . $stmt->error;
         }
-        
     }
 ?>
     <main class="maquinas-container">
         <form id="register-operator-form" action="UserOperador.php" method="POST" class="form-container">
-            <h2>Registro de Operadores</h2>
+            <h2>Operator Registration</h2>
 
-            <label for="name">Nombre:</label>
-            <input type="text" id="name" name="name" required placeholder="Ingrese el nombre">
+            <label for="name">First Name:</label>
+            <input type="text" id="name" name="name" required placeholder="Enter first name">
 
-            <label for="lastName">Apellido Paterno:</label>
-            <input type="text" id="lastName" name="lastName" required placeholder="Ingrese el apellido paterno">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
 
-            <label for="secLastName">Apellido Materno:</label>
-            <input type="text" id="secLastName" name="secLastName" placeholder="Ingrese el apellido materno">
+            <label for="secLastName">Middle Name:</label>
+            <input type="text" id="secLastName" name="secLastName" placeholder="Enter middle name">
 
-            <label for="numTel">Número de Teléfono:</label>
-            <input type="text" id="numTel" name="numTel" required placeholder="Ingrese el número de teléfono">
+            <label for="numTel">Phone Number:</label>
+            <input type="text" id="numTel" name="numTel" required placeholder="Enter phone number">
 
-            <button type="submit" name="submit">Registrar Operador</button>
+            <button type="submit" name="submit">Register Operator</button>
         </form>
     </main>
 </body>

@@ -1,51 +1,57 @@
 <?php
-        $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+session_start(); // Iniciar la sesión para acceder a las variables de sesión
 
-        if (!$conexion) {
-            die("Error en la conexión: " . mysqli_connect_error());
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['id_user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+
+if (!$conexion) {
+    die("Error en la conexión: " . mysqli_connect_error());
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $fecha = $_POST['fecha'];
+    $descripcion = $_POST['descripcion'];
+    $equipo_id = $_POST['equipo'];
+
+    // Obtener el ID del operador desde la sesión
+    $operador_id = $_SESSION['id_user']; // Asegúrate de que el ID del operador se almacene en la sesión
+
+    // Insertar la falla
+    $sql_failure = "INSERT INTO failure (date, description, operator) VALUES (?, ?, ?)";
+    $stmt = $conexion->prepare($sql_failure);
+    $stmt->bind_param("ssi", $fecha, $descripcion, $operador_id);
+
+    if ($stmt->execute()) {
+        $failure_id = $conexion->insert_id;
+
+        // Insertar el equipo afectado
+        $sql_equipment = "INSERT INTO failure_equipment (failure_id, equipment_id) VALUES (?, ?)";
+        $stmt_equipment = $conexion->prepare($sql_equipment);
+        $stmt_equipment->bind_param("ii", $failure_id, $equipo_id);
+
+        if ($stmt_equipment->execute()) {
+            echo "<div class='alert alert-success mt-3'>Reporte enviado exitosamente.</div>";
         } else {
-            echo "";
+            echo "<div class='alert alert-danger mt-3'>Error al registrar el equipo: " . $stmt_equipment->error . "</div>";
         }
-   
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-         
-            $fecha = $_POST['fecha'];
-            $descripcion = $_POST['descripcion'];
-            $equipo_id = $_POST['equipo'];
-    
-          
-            session_start();
-            $operador_id = $_SESSION['operador_id']; 
-    
-        
-            $sql_failure = "INSERT INTO failure (date, description, operator) VALUES (?, ?, ?)"; //PENDIENTE INGRESAR ID CON CREDENCIAL DE INCIO DE SESION
-            $stmt = $conexion->prepare($sql_failure);
-            $stmt->bind_param("ssi", $fecha, $descripcion, $operador_id);
-    
-            if ($stmt->execute()) {
-                $failure_id = $conexion->insert_id;
-    
-                $sql_equipment = "INSERT INTO failure_equipment (failure_id, equipment_id) VALUES (?, ?)";
-                $stmt_equipment = $conexion->prepare($sql_equipment);
-                $stmt_equipment->bind_param("ii", $failure_id, $equipo_id);
-    
-                if ($stmt_equipment->execute()) {
-                    echo "<div class='alert alert-success mt-3'>Reporte enviado exitosamente.</div>";
-                } else {
-                    echo "<div class='alert alert-danger mt-3'>Error al registrar el equipo: " . $stmt_equipment->error . "</div>";
-                }
-            } else {
-                echo "<div class='alert alert-danger mt-3'>Error al registrar la falla: " . $stmt->error . "</div>";
-            }
-    
+    } else {
+        echo "<div class='alert alert-danger mt-3'>Error al registrar la falla: " . $stmt->error . "</div>";
+    }
 
-            $stmt->close();
-            $stmt_equipment->close();
-        }
-    
-        $conexion->close();
+    $stmt->close();
+    if (isset($stmt_equipment)) {
+        $stmt_equipment->close();
+    }
+}
 
+$conexion->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,23 +76,22 @@
                 <label for="equipo">Equipo Afectado:</label>
                 <select class="form-control" id="equipo" name="equipo" required>
                     <?php
-                            $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
+                    $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
-                            if (!$conexion) {
-                                die("Error en la conexión: " . mysqli_connect_error());
-                            } else {
-                                echo "";
-                            }
-                        $sql_equipo = "SELECT id_equipment, name FROM equipment WHERE status = 'Operativo'"; // Asegúrate de que la tabla y los campos sean correctos
-                        $result = $conexion->query($sql_equipo);
+                    if (!$conexion) {
+                        die("Error en la conexión: " . mysqli_connect_error());
+                    }
 
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                echo "<option value='" . $row['id_equipment'] . "'>" . $row['name'] . "</option>";
-                            }
-                        } else {
-                            echo "<option value=''>No hay equipos disponibles</option>";
+                    $sql_equipo = "SELECT id_equipment, name FROM equipment WHERE status = 'Operativo'";
+                    $result = $conexion->query($sql_equipo);
+
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<option value='" . $row['id_equipment'] . "'>" . $row['name'] . "</option>";
                         }
+                    } else {
+                        echo "<option value=''>No hay equipos disponibles</option>";
+                    }
                     ?>
                 </select>
             </div>

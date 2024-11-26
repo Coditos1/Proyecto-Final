@@ -30,7 +30,7 @@
             } else {
                 echo "Error: " . $stmt->error;
             }
-    }
+        }
 ?>
 
 <main class="maquinas-container">
@@ -54,17 +54,15 @@
 
             <label for="equipment_location">Equipment Location:</label>
             <select id="equipment-location" name="equipment_location" required>
-            <option value="">Select equipment location</option>
+            <option value="">Seleccionar ubicación del equipo</option>
             <?php
                 $sql_location = "SELECT id_location, name FROM equipment_location";
-                $result_location = $conexion->query($sql_location);
-
                 if ($result_location->num_rows > 0) {
                     while ($row = $result_location->fetch_assoc()) {
                         echo "<option value='" . $row['id_location'] . "'>" . $row['name'] . "</option>";
                     }
                 } else {
-                    echo "<option value=''>No locations available</option>";
+                    echo "<option value=''>No hay ubicaciones disponibles</option>";
                 }
             ?>
         </select>
