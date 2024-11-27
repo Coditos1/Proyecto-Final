@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $stmt_work_order->bind_param("siisi", $descripcion, $equipo_id, $tecnico_id, $supervisor_id, $tecnico_id);
+    $stmt_work_order->bind_param("siisi", $descripcion, $equipo_id, $tecnico_id, $administrator_id, $tecnico_id);
 
     if ($stmt_work_order->execute()) {
         $work_order_id = $conexion->insert_id;
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_maintenance->bind_param("ssiii", $fecha_limite, $descripcion, $equipo_id, $tecnico_id, $tipo_mantenimiento_id);
 
         if ($stmt_maintenance->execute()) {
-            echo "<div class='alert alert-success'>Work order generated successfully.</div>";
+            echo "<div class='alert alert-success'></div>";
         } else {
             echo "<div class='alert alert-danger'>Error registering maintenance: " . $stmt_maintenance->error . "</div>";
         }

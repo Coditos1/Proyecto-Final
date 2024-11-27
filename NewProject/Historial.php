@@ -7,23 +7,20 @@
         die("Error en la conexión: " . mysqli_connect_error());
     }
 
-    // Inicializar variables para el filtrado
-    $filter_date = isset($_POST['filter_date']) ? $_POST['filter_date'] : '';
-    $filter_status = isset($_POST['filter_status']) ? $_POST['filter_status'] : '';
+    // Inicializar variable para el orden
+    $selected_date_order = isset($_POST['filtro_fecha']) ? $_POST['filtro_fecha'] : 'nueva'; // Por defecto, ordenar de más nuevo a más viejo
 
-    // Construir la consulta SQL con filtros
-    $sql_history = "SELECT mh.id_history, mh.completionDate AS maintenance_date, mh.description, e.name AS equipment, o.name AS operator, mh.status
-                    FROM maintenance_history
+    // Construir la consulta SQL
+    $sql_history = "SELECT mh.id_history, mh.completionDate AS maintenance_date, mh.results, mh.observations, e.name AS equipment
+                    FROM maintenance_history mh
                     JOIN equipment e ON mh.equipment = e.id_equipment
-                    JOIN operator o ON mh.operator = o.id_operator
                     WHERE 1=1"; // Condición siempre verdadera para facilitar la adición de filtros
 
-    // Agregar filtros a la consulta
-    if (!empty($filter_date)) {
-        $sql_history .= " AND mh.completionDate = '$filter_date'";
-    }
-    if (!empty($filter_status)) {
-        $sql_history .= " AND mh.status = '$filter_status'";
+    // Agregar orden a la consulta
+    if ($selected_date_order == 'antigua') {
+        $sql_history .= " ORDER BY mh.completionDate ASC"; // Ordenar de más viejo a más nuevo
+    } else {
+        $sql_history .= " ORDER BY mh.completionDate DESC"; // Ordenar de más nuevo a más viejo
     }
 
     $result_history = $conexion->query($sql_history);
@@ -38,20 +35,13 @@
                 <h2>Maintenance History</h2>
             </div>
 
-            <!-- Filter form -->
+            <!-- Formulario de ordenamiento -->
             <form method="POST" action="">
-                <label for="filter_date">Filter by Date:</label>
-                <input type="date" id="filter_date" name="filter_date" value="<?php echo $filter_date; ?>">
-
-                <label for="filter_status">Filter by Status:</label>
-                <select id="filter_status" name="filter_status">
-                    <option value="">All</option>
-                    <option value="Completed" <?php if ($filter_status == 'Completado') echo 'selected'; ?>>Completed</option>
-                    <option value="Pending" <?php if ($filter_status == 'Pendiente') echo 'selected'; ?>>Pending</option>
-                    <option value="In Progress" <?php if ($filter_status == 'En Proceso') echo 'selected'; ?>>In Progress</option>
+                <label for="filtro_fecha">Order by Date:</label>
+                <select id="filtro_fecha" name="filtro_fecha" onchange="this.form.submit()">
+                    <option value="nueva" <?php echo ($selected_date_order == 'nueva') ? 'selected' : ''; ?>>Newest to Oldest</option>
+                    <option value="antigua" <?php echo ($selected_date_order == 'antigua') ? 'selected' : ''; ?>>Oldest to Newest</option>
                 </select>
-
-                <button type="submit">Filter</button>
             </form>
 
             <div class="tabla-container">
@@ -60,10 +50,9 @@
                         <tr>
                             <th>Maintenance ID</th>
                             <th>Maintenance Date</th>
-                            <th>Description</th>
+                            <th>Results</th>
+                            <th>Observations</th>
                             <th>Equipment</th>
-                            <th>Operator</th>
-                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,14 +62,13 @@
                                 echo "<tr>
                                         <td>#MANT" . $row['id_history'] . "</td>
                                         <td>" . $row['maintenance_date'] . "</td>
-                                        <td>" . $row['description'] . "</td>
+                                        <td>" . $row['results'] . "</td>
+                                        <td>" . $row['observations'] . "</td>
                                         <td>" . $row['equipment'] . "</td>
-                                        <td>" . $row['operator'] . "</td>
-                                        <td>" . $row['status'] . "</td>
                                     </tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>No maintenance records found.</td></tr>";
+                            echo "<tr><td colspan='5'>No maintenance records found.</td></tr>";
                         }
                         ?>
                     </tbody>

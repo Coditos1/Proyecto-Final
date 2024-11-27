@@ -9,28 +9,32 @@
         echo "";
     }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST["name"]; 
-            $model = $_POST["model"];
-            $brand = $_POST["brand"];
-            $status = $_POST["status"]; 
-            $equipment_location = $_POST["equipment_location"];
-            
-            $sql = "INSERT INTO equipment (name, model, brand, status, equipment_location) VALUES (?, ?, ?, ?, ?)";
-            $stmt = $conexion->prepare($sql);
-            
-            if ($stmt === false) {
-                die("Error en la preparación de la consulta: " . $conexion->error);
-            }
-            
-            $stmt->bind_param("sssss", $name, $model, $brand, $status, $equipment_location);
-            
-            if ($stmt->execute()) {
-                echo "Nueva máquina registrado exitosamente.";
-            } else {
-                echo "Error: " . $stmt->error;
-            }
+    // Obtener las ubicaciones del equipo
+    $sql_location = "SELECT id_location, name FROM equipment_location";
+    $result_location = $conexion->query($sql_location); // Ejecutar la consulta
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = $_POST["name"]; 
+        $model = $_POST["model"];
+        $brand = $_POST["brand"];
+        $status = $_POST["status"]; 
+        $equipment_location = $_POST["equipment_location"];
+        
+        $sql = "INSERT INTO equipment (name, model, brand, status, equipment_location) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conexion->prepare($sql);
+        
+        if ($stmt === false) {
+            die("Error en la preparación de la consulta: " . $conexion->error);
         }
+        
+        $stmt->bind_param("sssss", $name, $model, $brand, $status, $equipment_location);
+        
+        if ($stmt->execute()) {
+            echo "Nueva máquina registrado exitosamente.";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+    }
 ?>
 
 <main class="maquinas-container">
@@ -56,7 +60,6 @@
             <select id="equipment-location" name="equipment_location" required>
             <option value="">Seleccionar ubicación del equipo</option>
             <?php
-                $sql_location = "SELECT id_location, name FROM equipment_location";
                 if ($result_location->num_rows > 0) {
                     while ($row = $result_location->fetch_assoc()) {
                         echo "<option value='" . $row['id_location'] . "'>" . $row['name'] . "</option>";

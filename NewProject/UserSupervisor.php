@@ -25,7 +25,7 @@
         $password = substr(md5(uniqid()), 0, 8);
         
 
-        $sql = "CALL RegisterSupervisor(?, ?, ?, ?, ?, ?, ?)";
+        $sql = "CALL RegisterAdministrator(?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("sssssss", $name, $lastName, $secLastName, $numTel, $email, $user, $password);
         

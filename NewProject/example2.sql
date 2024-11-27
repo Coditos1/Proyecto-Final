@@ -155,6 +155,7 @@ CREATE TABLE maintenance_history(
     observations TEXT NOT NULL,
     equipment INT NOT NULL,
     maintenance INT NOT NULL,
+    id_user INT NOT NULL,
     FOREIGN KEY (equipment) REFERENCES equipment(id_equipment),
     FOREIGN KEY (maintenance) REFERENCES maintenance(id_maintenance)
 )
@@ -827,13 +828,22 @@ GROUP BY e.id
 ORDER BY total_failures DESC
 LIMIT 1;
 
+
+DELIMITER //
 CREATE TRIGGER before_insert
 BEFORE INSERT ON operator
 FOR EACH ROW
 BEGIN
 SET NEW.password = AES_ENCRYPT(NEW.password, "key");
-END
+END //
+DELIMITER ;
 
 SELECT AES_DECRYPT(password, "key")
 FROM operator
-WHERE id_operator=44
+WHERE id_operator=39
+
+INSERT INTO failure (date, description, operator)
+VALUES (CURDATE(), 'Falla en el motor', 39); 
+
+INSERT INTO failure_equipment (failure, equipment)
+VALUES (@last_failure_id, 2);

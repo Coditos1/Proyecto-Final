@@ -9,6 +9,10 @@ if (!$conexion) {
     echo "";
 }
 
+// Filtrar resultados
+$result_filter = isset($_POST['result_filter']) ? $_POST['result_filter'] : '';
+
+// Modificar la consulta SQL para incluir el filtro
 $sql = "SELECT 
     e.name AS equipment_name,
     t.name AS technician_name,
@@ -18,16 +22,38 @@ $sql = "SELECT
 FROM maintenance m
 JOIN maintenance_history mh ON m.id_maintenance = mh.maintenance
 JOIN equipment e ON m.equipment = e.id_equipment
-JOIN technician t ON m.technician = t.id_technician
-ORDER BY mh.completionDate DESC;
-";
+JOIN technician t ON m.technician = t.id_technician";
 
-$result = $conexion->query($sql);
+if ($result_filter) {
+    $sql .= " WHERE mh.results = ?";
+}
+
+// Ordenar por fecha de finalización
+$sql .= " ORDER BY mh.completionDate DESC;";
+
+$stmt = $conexion->prepare($sql);
+if ($result_filter) {
+    $stmt->bind_param("s", $result_filter);
+}
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <body>
     <h1>Maintenance Reports</h1>
-    <table>
+    
+    <form method="POST" action="">
+        <label for="result_filter">Filter by Result:</label>
+        <select name="result_filter" id="result_filter">
+            <option value="">All</option>
+            <option value="Exitoso" <?php if ($result_filter == 'Exitoso') echo 'selected'; ?>>Exitoso</option>
+            <option value="Requiere seguimiento" <?php if ($result_filter == 'Requiere seguimiento') echo 'selected'; ?>>Requiere seguimiento</option>
+            <option value="No se pudo completar" <?php if ($result_filter == 'No se pudo completar') echo 'selected'; ?>>No se pudo completar</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+
+    <table class="reportes-tabla">
         <thead>
             <tr>
                 <th>Equipment Name</th>
@@ -41,11 +67,23 @@ $result = $conexion->query($sql);
             <?php
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
+                    $estado_class = '';
+                    switch ($row['results']) {
+                        case 'Exitoso':
+                            $estado_class = 'estado exitoso';
+                            break;
+                        case 'Requiere seguimiento':
+                            $estado_class = 'estado seguimiento';
+                            break;
+                        case 'No se pudo completar':
+                            $estado_class = 'estado no-completo';
+                            break;
+                    }
                     echo "<tr>
                             <td>{$row['equipment_name']}</td>
                             <td>{$row['technician_name']}</td>
                             <td>{$row['completionDate']}</td>
-                            <td>{$row['results']}</td>
+                            <td class='{$estado_class}'>{$row['results']}</td>
                             <td>{$row['observations']}</td>
                           </tr>";
                 }
@@ -55,6 +93,5 @@ $result = $conexion->query($sql);
             ?>
         </tbody>
     </table>
-
 </body>
 </html>

@@ -906,7 +906,7 @@ BEGIN
 END;
 
 
-CREATE PROCEDURE RegisterSupervisor(
+CREATE PROCEDURE RegisterAdministrator(
     IN p_name VARCHAR(40),
     IN p_lastName VARCHAR(40),
     IN p_secLastName VARCHAR(40),
@@ -916,11 +916,28 @@ CREATE PROCEDURE RegisterSupervisor(
     IN p_password VARCHAR(20)
 )
 BEGIN
-    INSERT INTO supervisor (name, lastName, secLastName, numTel, email, user, password)
+    INSERT INTO administrator (name, lastName, secLastName, numTel, email, user, password)
     VALUES (p_name, p_lastName, p_secLastName, p_numTel, p_email, p_user, p_password);
-END
+END;
 
 
+DELIMITER //
 
+CREATE PROCEDURE RegisterTechnician(
+    IN p_name VARCHAR(40),
+    IN p_lastName VARCHAR(40),
+    IN p_secLastName VARCHAR(40),
+    IN p_numTel VARCHAR(15),
+    IN p_email VARCHAR(50),
+    IN p_specialty VARCHAR(50),
+    IN p_user VARCHAR(30),
+    IN p_password VARCHAR(20)
+)
+BEGIN
+    INSERT INTO technician (name, lastName, secLastName, numTel, email, specialty, user, password)
+    VALUES (p_name, p_lastName, p_secLastName, p_numTel, p_email, p_specialty, p_user, p_password);
+END //
+
+DELIMITER ;
 
 

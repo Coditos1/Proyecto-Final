@@ -15,29 +15,44 @@ if (!$conexion) {
     die("Error en la conexión: " . mysqli_connect_error());
 }
 
-$sql_repuestos = "SELECT id_spareParts, name FROM spare_parts";
-$result_repuestos = $conexion->query($sql_repuestos);
+// Obtener los equipos disponibles
+$sql_equipos = "SELECT id_equipment, name FROM equipment";
+$result_equipos = $conexion->query($sql_equipos);
+
+// Obtener los tipos de mantenimiento disponibles
+$sql_mantenimientos = "SELECT id_maintType, name FROM maintenance_types";
+$result_mantenimientos = $conexion->query($sql_mantenimientos);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fecha_mantenimiento = $_POST['fecha_mantenimiento'];
     $resultados = $_POST['resultados'];
     $observaciones = $_POST['observaciones'];
-    $repuesto_id = $_POST['repuesto'];
-    $cantidad_usada = $_POST['cantidad_usada'];
-    $id_orden = $_POST['id_orden'];
+    $equipment_id = $_POST['equipment']; // ID del equipo
+    $maintenance_id = $_POST['maintenance']; // ID del mantenimiento
+    $id_orden = $_POST['id_orden']; // ID de la orden de trabajo
 
-    $sql_insert = "INSERT INTO maintenance_history (completionDate, results, observations, spare_parts, usedQuantity, user_id) 
+    // Inserción en la tabla maintenance_history
+    $sql_insert = "INSERT INTO maintenance_history (completionDate, results, observations, equipment, maintenance, id_user) 
                    VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql_insert);
-    $stmt->bind_param("ssssii", $fecha_mantenimiento, $resultados, $observaciones, $repuesto_id, $cantidad_usada, $user_id);
-    $stmt->execute();
-
-    if ($resultados == "Exitoso") {
-        $sql_update = "UPDATE work_orders SET status = 'Completado' WHERE id_workOrders = ?";
-        $stmt_update = $conexion->prepare($sql_update);
-        $stmt_update->bind_param("i", $id_orden);
-        $stmt_update->execute();
-        $stmt_update->close();
+    
+    // Asegúrate de que estás pasando los valores correctos
+    $stmt->bind_param("ssssii", $fecha_mantenimiento, $resultados, $observaciones, $equipment_id, $maintenance_id, $user_id);
+    
+    // Ejecutar la consulta
+    if ($stmt->execute()) {
+        // Actualizar el estado de la orden de trabajo si es exitoso
+        if ($resultados == "Exitoso") {
+            // Actualizar el estado de la orden de trabajo
+            $sql_update = "UPDATE work_orders SET status = 'Completada' WHERE id_workOrders = ?";
+            $stmt_update = $conexion->prepare($sql_update);
+            $stmt_update->bind_param("i", $id_orden);
+            $stmt_update->execute();
+            $stmt_update->close();
+        }
+    } else {
+        // Manejo de errores
+        die("Error en la inserción: " . $stmt->error);
     }
 }
 ?>
@@ -61,15 +76,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="observaciones">Observations:</label>
         <textarea id="observaciones" name="observaciones" rows="4" required></textarea>
 
-        <label for="repuesto">Spare Parts Used:</label>
-        <select id="repuesto" name="repuesto" required>
-            <?php while ($row = $result_repuestos->fetch_assoc()): ?>
-                <option value="<?php echo $row['id_spareParts']; ?>"><?php echo $row['name']; ?></option>
+        <label for="equipment">Equipment:</label>
+        <select id="equipment" name="equipment" required>
+            <?php while ($row = $result_equipos->fetch_assoc()): ?>
+                <option value="<?php echo $row['id_equipment']; ?>"><?php echo $row['name']; ?></option>
             <?php endwhile; ?>
         </select>
 
-        <label for="cantidad_usada">Quantity Used:</label>
-        <input type="number" id="cantidad_usada" name="cantidad_usada" min="1" required>
+        <label for="maintenance">Maintenance Type:</label>
+        <select id="maintenance" name="maintenance" required>
+            <?php 
+            if ($result_mantenimientos->num_rows > 0) {
+                while ($row = $result_mantenimientos->fetch_assoc()) {
+                    echo '<option value="' . $row['id_maintType'] . '">' . $row['name'] . '</option>';
+                }
+            } else {
+                echo '<option value="">No maintenance types available</option>';
+            }
+            ?>
+        </select>
 
         <button type="submit">Submit Report</button>
     </form>
