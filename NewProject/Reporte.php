@@ -46,10 +46,25 @@
     if (isset($_POST['id_failure'])) {
         $id_failure = $_POST['id_failure'];
 
-       
+        // Primero, eliminar las dependencias en failure_equipment
+        $delete_failures_query = "DELETE FROM failure_equipment WHERE failure = ?";
+        $stmt_failures = $conexion->prepare($delete_failures_query);
+        $stmt_failures->bind_param("i", $id_failure);
+        $stmt_failures->execute();
+        $stmt_failures->close();
+
+        // Luego, eliminar el reporte
         $sql = "DELETE FROM failure WHERE id_failure = ?";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("i", $id_failure);
+        
+        if ($stmt->execute()) {
+            header("Location: Reporte.php");
+            exit();
+        } else {
+            echo "<script>alert('Error al eliminar el reporte.');</script>";
+        }
+        $stmt->close();
     }
 ?>
 
@@ -158,13 +173,13 @@
                                             </form>
                                             <form method='POST' action='Reporte.php' style='display:inline;'>
                                                 <input type='hidden' name='id_failure' value='" . $row['id_failure'] . "'>
-                                                <button type='submit' class='btn-accion eliminar' onclick='return confirm(\"¿Estás seguro de que deseas eliminar este reporte?\");'>Delete</button>
+                                                <button type='submit' class='btn-accion eliminar' onclick='return confirm(\"¿Are you sure you want to delete this report?\");'>Delete</button>
                                             </form>
                                         </td>
                                     </tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='5'>No se encontraron reportes.</td></tr>";
+                            echo "<tr><td colspan='5'>No reports found.</td></tr>";
                         }
                         ?>
                     </tbody>

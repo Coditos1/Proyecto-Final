@@ -5,8 +5,6 @@ $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
 if (!$conexion) {
     die("Error en la conexión: " . mysqli_connect_error());
-} else {
-    echo "";
 }
 
 // Filtrar resultados
@@ -19,16 +17,14 @@ $sql = "SELECT
     mh.completionDate,
     mh.results,
     mh.observations
-FROM maintenance m
-JOIN maintenance_history mh ON m.id_maintenance = mh.maintenance
-JOIN equipment e ON m.equipment = e.id_equipment
-JOIN technician t ON m.technician = t.id_technician";
+FROM maintenance_history mh
+JOIN equipment e ON mh.equipment = e.id_equipment
+JOIN technician t ON mh.id_user = t.id_technician";
 
 if ($result_filter) {
     $sql .= " WHERE mh.results = ?";
 }
 
-// Ordenar por fecha de finalización
 $sql .= " ORDER BY mh.completionDate DESC;";
 
 $stmt = $conexion->prepare($sql);
@@ -72,7 +68,7 @@ $result = $stmt->get_result();
                         case 'Exitoso':
                             $estado_class = 'estado exitoso';
                             break;
-                        case 'Requiere seguimiento':
+                        case 'Pendiente':
                             $estado_class = 'estado seguimiento';
                             break;
                         case 'No se pudo completar':

@@ -14,8 +14,8 @@ CREATE TABLE operator(
     secLastName VARCHAR (40),
     numTel VARCHAR (15) NOT NULL UNIQUE,
     email VARCHAR (50) NOT NULL UNIQUE,
-    user VARBINARY (30) NOT NULL UNIQUE,
-    password VARBINARY (20) NOT NULL UNIQUE
+    user VARCHAR (30) NOT NULL UNIQUE,
+    password VARCHAR (20) NOT NULL UNIQUE
 )
 
 CREATE TABLE administrator(
@@ -25,8 +25,8 @@ CREATE TABLE administrator(
     secLastName VARCHAR (40),
     numTel VARCHAR (15) NOT NULL UNIQUE,
     email VARCHAR (50) NOT NULL UNIQUE,
-    user VARBINARY (30) NOT NULL UNIQUE,
-    password VARBINARY (20) NOT NULL UNIQUE
+    user VARCHAR (30) NOT NULL UNIQUE,
+    password VARCHAR (20) NOT NULL UNIQUE
 )
 
 CREATE TABLE technician(
@@ -37,8 +37,8 @@ CREATE TABLE technician(
     numTel VARCHAR (15) NOT NULL UNIQUE,
     email VARCHAR (50) NOT NULL UNIQUE,
     specialty VARCHAR (30) NOT NULL,
-    user VARBINARY (30) NOT NULL UNIQUE,
-    password VARBINARY (20) NOT NULL UNIQUE
+    user VARCHAR (30) NOT NULL UNIQUE,
+    password VARCHAR (20) NOT NULL UNIQUE
 )
 
 CREATE TABLE maintenance_types(
@@ -847,3 +847,19 @@ VALUES (CURDATE(), 'Falla en el motor', 39);
 
 INSERT INTO failure_equipment (failure, equipment)
 VALUES (@last_failure_id, 2);
+
+GRANT INSERT, SELECT, UPDATE ON industrial_maintenance.* to 'operator'@'localhost'; 
+
+
+
+DELIMITER //
+
+CREATE TRIGGER before_insert_administrator
+BEFORE INSERT ON administrator
+FOR EACH ROW
+BEGIN
+    SET NEW.user = AES_ENCRYPT(NEW.user, "key");
+    SET NEW.password = AES_ENCRYPT(NEW.password, "key");
+END //
+
+DELIMITER ;

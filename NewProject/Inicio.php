@@ -89,9 +89,5 @@
         
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Sistema de Gestión de Mantenimiento. Todos los derechos reservados.</p>
-    </footer>
 </body>
 </html>

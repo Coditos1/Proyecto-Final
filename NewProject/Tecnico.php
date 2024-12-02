@@ -9,10 +9,16 @@ if (!isset($_SESSION['id_user'])) {
 
 $user_id = $_SESSION['id_user'];
 
+if ($user_id) {
+    echo "ID de usuario en sesión: " . htmlspecialchars($user_id);
+} else {
+    echo "No se pudo obtener el ID de usuario.";
+}
+
 $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
 if (!$conexion) {
-    die("Error en la conexión: " . mysqli_connect_error());
+    die("Connection error: " . mysqli_connect_error());
 }
 
 $sql_ordenes = "SELECT wo.id_workOrders AS id_order, wo.creationDate AS assigned_date, wo.description, wo.status, e.name AS equipment_name 
@@ -26,15 +32,15 @@ $result_ordenes = $stmt_ordenes->get_result();
 ?>
 
 <section id="ordenes">
-    <h2>Órdenes de Trabajo Asignadas</h2>
+    <h2>Assigned Work Orders</h2>
     <table>
         <thead>
             <tr>
-                <th>ID Orden</th>
-                <th>Fecha Asignada</th>
-                <th>Descripción</th>
-                <th>Estado</th>
-                <th>Equipo</th>
+                <th>Order ID</th>
+                <th>Assigned Date</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Equipment</th>
             </tr>
         </thead>
         <tbody>

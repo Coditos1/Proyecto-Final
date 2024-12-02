@@ -4,14 +4,14 @@
     $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
     if (!$conexion) {
-        die("Error en la conexión: " . mysqli_connect_error());
+        die("Connection error: " . mysqli_connect_error());
     } else {
         echo "";
     }
 
-    // Obtener las ubicaciones del equipo
+    // Get equipment locations
     $sql_location = "SELECT id_location, name FROM equipment_location";
-    $result_location = $conexion->query($sql_location); // Ejecutar la consulta
+    $result_location = $conexion->query($sql_location); // Execute the query
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $_POST["name"]; 
@@ -24,13 +24,13 @@
         $stmt = $conexion->prepare($sql);
         
         if ($stmt === false) {
-            die("Error en la preparación de la consulta: " . $conexion->error);
+            die("Error preparing the query: " . $conexion->error);
         }
         
         $stmt->bind_param("sssss", $name, $model, $brand, $status, $equipment_location);
         
         if ($stmt->execute()) {
-            echo "Nueva máquina registrado exitosamente.";
+            echo "New machine registered successfully.";
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -58,14 +58,14 @@
 
             <label for="equipment_location">Equipment Location:</label>
             <select id="equipment-location" name="equipment_location" required>
-            <option value="">Seleccionar ubicación del equipo</option>
+            <option value="">Select equipment location</option>
             <?php
                 if ($result_location->num_rows > 0) {
                     while ($row = $result_location->fetch_assoc()) {
                         echo "<option value='" . $row['id_location'] . "'>" . $row['name'] . "</option>";
                     }
                 } else {
-                    echo "<option value=''>No hay ubicaciones disponibles</option>";
+                    echo "<option value=''>No locations available</option>";
                 }
             ?>
         </select>

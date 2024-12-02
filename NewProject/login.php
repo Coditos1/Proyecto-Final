@@ -12,22 +12,24 @@ if (!$conexion) {
 }
 
 // Verificar si se han enviado los datos del formulario
+// Verificar si se han enviado los datos del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($_POST['contraseña'])) {
     $usuario = $_POST['usuario'];
     $contraseña = $_POST['contraseña'];
 
-    // Intentar comprobar en la tabla de supervisores
+    // Intentar comprobar en la tabla de administradores
     try {
         $stmt = mysqli_prepare($conexion, "SELECT id_administrator, user FROM administrator WHERE user = ? AND password = ?");
         mysqli_stmt_bind_param($stmt, 'ss', $usuario, $contraseña);
         mysqli_stmt_execute($stmt);
         $resultado = mysqli_stmt_get_result($stmt);
 
-        // Verificar si se encontró un supervisor
+        // Verificar si se encontró un administrador
         if (mysqli_num_rows($resultado) > 0) {
             $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
-            $_SESSION['id_user'] = $row['id_administrator']; // Almacenar el ID del supervisor en la sesión
+            $_SESSION['id_user'] = $row['id_administrator']; // Almacenar el ID del administrador en la sesión
+            $_SESSION['user_type'] = 'administrator'; // Almacenar el tipo de usuario
             header("Location: Supervisor.php");
             exit();
         }
@@ -43,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($
             $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
             $_SESSION['id_user'] = $row['id_operator']; // Almacenar el ID del operador en la sesión
+            $_SESSION['user_type'] = 'operator'; // Almacenar el tipo de usuario
             header("Location: Operador.php");
             exit();
         }
@@ -58,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($
             $row = mysqli_fetch_assoc($resultado);
             $_SESSION['usuario'] = $usuario; // Almacenar el usuario en la sesión
             $_SESSION['id_user'] = $row['id_technician']; // Almacenar el ID del técnico en la sesión
+            $_SESSION['user_type'] = 'technician'; // Almacenar el tipo de usuario
             header("Location: Tecnico.php");
             exit();
         }
@@ -74,7 +78,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['usuario']) && isset($
     // Mostrar el mensaje solo si no se ha enviado el formulario
     echo "<h1>Por favor, ingresa tus credenciales.</h1>";
 }
-
-// Cerrar la conexión
-mysqli_close($conexion);
 ?>
+

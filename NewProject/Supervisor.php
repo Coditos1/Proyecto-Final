@@ -73,12 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select id="tecnico" name="tecnico" required>
                     <option value="">Select a technician</option>
                     <?php
-                    $sql_tecnico = "SELECT id_technician, name FROM technician";
+                    $sql_tecnico = "SELECT id_technician, name, lastName FROM technician";
                     $result_tecnico = $conexion->query($sql_tecnico);
 
                     if ($result_tecnico->num_rows > 0) {
                         while ($row = $result_tecnico->fetch_assoc()) {
-                            echo "<option value='" . $row['id_technician'] . "'>" . $row['name'] . "</option>";
+                            echo "<option value='" . $row['id_technician'] . "'>" . $row['name'] . " " . $row['lastName'] . "</option>";
                         }
                     } else {
                         echo "<option value=''>No technicians available</option>";
@@ -243,4 +243,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 
 </html>
-
