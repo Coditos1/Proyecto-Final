@@ -5,17 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operator</title>
     <link rel="stylesheet" href="css/tecnico.css">
+    <link rel="stylesheet" href="css/modal.css">
 </head>
 <body>
     <div class="container">
         <nav class="sidebar">
             <ul>
                 <li><a href="Operador.php">Reportar Fallo</a></li>
-                <li><a href="OpReport.php">Ver Reportes de Fallos</a></li>
+                <li><a href="ViewOpReports.php">Ver Reportes de Fallos</a></li>
+                <li><button id="openModal" class="open-modal">My Profile</button></li>
                 <form method="POST" action="logout.php" style="display:inline;">
                     <button type="submit" class="open-modal">Log Out</button>
                 </form>
             </ul>
         </nav>
+
+
+        <div id="modal" class="modal-container">
+            <div class="modal-content">
+                <span id="closeModal" class="close-modal">&times;</span>
+                <h2>My Profile</h2>
+
+                <!-- Información del perfil -->
+                <div id="profile-info">
+                    <div class="info-card">
+                        <strong>Name:</strong> <span><?php echo htmlspecialchars($datos_usuario['name'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-card">
+                        <strong>Last Name:</strong> <span><?php echo htmlspecialchars($datos_usuario['lastName'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-card">
+                        <strong>Second Last Name:</strong> <span><?php echo htmlspecialchars($datos_usuario['secLastName'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-card">
+                        <strong>Phone Number:</strong> <span><?php echo htmlspecialchars($datos_usuario['numTel'] ?? ''); ?></span>
+                    </div>
+                    <div class="info-card">
+                        <strong>Email:</strong> <span><?php echo htmlspecialchars($datos_usuario['email'] ?? ''); ?></span>
+                    </div>
+                    <button id="editProfileButton">Edit Information</button>
+                </div>
+
+                <!-- Formulario de edición -->
+                <form id="editProfileForm" action="actualizar_perfil_operador.php" method="POST">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($datos_usuario['name'] ?? ''); ?>" required>
+
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($datos_usuario['lastName'] ?? ''); ?>" required>
+
+                    <label for="secLastName">Second Last Name:</label>
+                    <input type="text" id="secLastName" name="secLastName" value="<?php echo htmlspecialchars($datos_usuario['secLastName'] ?? ''); ?>">
+
+                    <label for="numTel">Phone Number:</label>
+                    <input type="tel" id="numTel" name="numTel" value="<?php echo htmlspecialchars($datos_usuario['numTel'] ?? ''); ?>" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($datos_usuario['email'] ?? ''); ?>" required>
+
+                    <button type="submit">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="modal.js"></script>
 </body>
 </html>

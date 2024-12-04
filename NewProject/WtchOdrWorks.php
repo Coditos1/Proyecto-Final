@@ -61,8 +61,11 @@ $result = $stmt->get_result();
 ?>
 
 <body>
-    <main class="ordenes-container">
+    <main class="reporte-container">
+    <section class="reportes-tabla">
         <h2>Work Orders</h2>
+
+        <div class="tabla-container">
         <table>
             <thead>
                 <tr>
@@ -85,9 +88,9 @@ $result = $stmt->get_result();
                                 <td>
                                     <form method='POST' style='display:inline;'>
                                         <input type='hidden' name='delete_order' value='" . $row['id_workOrders'] . "'>
-                                        <button type='submit' onclick='return confirm(\"Are you sure you want to delete this work order?\");' style='margin-right: 10px;'>Delete</button>
+                                        <button type='submit' class='btn-accion' onclick='return confirm(\"Are you sure you want to delete this work order?\");' style='margin-right: 10px;'>Delete</button>
                                     </form>
-                                    <button onclick='openModal(" . $row['id_workOrders'] . ", \"" . addslashes($row['description']) . "\")'>Update</button>
+                                    <button class='btn-accion' onclick='openModal(" . $row['id_workOrders'] . ", \"" . addslashes($row['description']) . "\")'>Update</button>
                                 </td>
                             </tr>";
                     }
@@ -97,6 +100,8 @@ $result = $stmt->get_result();
                 ?>
             </tbody>
         </table>
+        </div>
+    </section>
     </main>
 
     <!-- Modal para actualizar la descripción -->
@@ -148,6 +153,66 @@ $result = $stmt->get_result();
         text-decoration: none;
         cursor: pointer;
     }
+
+    .btn-accion {
+            padding: 10px 15px;
+            font-size: 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            width: 100px;
+            height: auto;
+            vertical-align: middle;
+            background-color: #ff7f50; /* Orange color */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .btn-accion:hover {
+            background-color: #e76a3c; /* Darker orange on hover */
+        }
+
+        .filtros {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filtros input[type="text"] {
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px; /* Adjust width as needed */
+        }
+
+        .filtro-fecha {
+            margin-left: 10px;
+        }
+
+        .tabla-container {
+            max-height: 75vh; /* Increase max height of the table container */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+            margin-top: 20px; /* Top margin to separate from filters */
+        }
+
+        table {
+            width: 100%; /* Ensure table takes full width of container */
+            border-collapse: collapse; /* Collapse borders for better design */
+        }
+
+        th, td {
+            padding: 10px; /* Internal spacing in cells */
+            padding-left: 70px;
+            text-align: center; /* Center text */
+            border-bottom: 1px solid #ddd; /* Bottom line to separate rows */
+            width: 20%; /* Ensure each column takes 20% of total width */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Background color for headers */
+        }
     </style>
 
     <script>

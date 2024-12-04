@@ -48,48 +48,48 @@ if (isset($_SESSION['username'])) {
     <div id="modal" class="modal-container">
     <div class="modal-content">
         <span id="closeModal" class="close-modal">&times;</span>
-        <h2>Mi Perfil</h2>
+        <h2>My Profile</h2>
 
         <!-- Mostrar la información personal -->
-        <div id="profile-info">
+    <div id="profile-info">
     <div class="info-card">
-        <strong>Nombre:</strong> <span><?php echo htmlspecialchars($datos_usuario['name'] ?? ''); ?></span>
+        <strong>Name:</strong> <span><?php echo htmlspecialchars($datos_usuario['name'] ?? ''); ?></span>
     </div>
     <div class="info-card">
-        <strong>Apellido:</strong> <span><?php echo htmlspecialchars($datos_usuario['lastName'] ?? ''); ?></span>
+        <strong>LastName:</strong> <span><?php echo htmlspecialchars($datos_usuario['lastName'] ?? ''); ?></span>
     </div>
     <div class="info-card">
-        <strong>Segundo Apellido:</strong> <span><?php echo htmlspecialchars($datos_usuario['secLastName'] ?? ''); ?></span>
+        <strong>Second Last Name:</strong> <span><?php echo htmlspecialchars($datos_usuario['secLastName'] ?? ''); ?></span>
     </div>
     <div class="info-card">
-        <strong>Número de Teléfono:</strong> <span><?php echo htmlspecialchars($datos_usuario['numTel'] ?? ''); ?></span>
+        <strong>Phone Number:</strong> <span><?php echo htmlspecialchars($datos_usuario['numTel'] ?? ''); ?></span>
     </div>
     <div class="info-card">
         <strong>Email:</strong> <span><?php echo htmlspecialchars($datos_usuario['email'] ?? ''); ?></span>
     </div>
 
-    <button id="editProfileButton">Editar Información</button>
+    <button id="editProfileButton">Edit Information</button>
 </div>
 
 
         <!-- Formulario para editar la información -->
 <form id="editProfileForm" action="" method="POST" style="display: none;">
-    <label for="name">Nombre:</label>
+    <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($datos_usuario['name'] ?? ''); ?>" required>
 
-    <label for="lastName">Apellido:</label>
+    <label for="lastName">Last Name:</label>
     <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($datos_usuario['lastName'] ?? ''); ?>" required>
 
-    <label for="secLastName">Segundo Apellido:</label>
+    <label for="secLastName">Second Last Name:</label>
     <input type="text" id="secLastName" name="secLastName" value="<?php echo htmlspecialchars($datos_usuario['secLastName'] ?? ''); ?>">
 
-    <label for="numTel">Número de Teléfono:</label>
+    <label for="numTel">Phone Number:</label>
     <input type="tel" id="numTel" name="numTel" value="<?php echo htmlspecialchars($datos_usuario['numTel'] ?? ''); ?>" required>
 
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($datos_usuario['email'] ?? ''); ?>" required>
 
-    <button type="submit">Guardar Cambios</button>
+    <button type="submit">Save Changes</button>
 </form>
 
 

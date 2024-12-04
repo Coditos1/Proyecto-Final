@@ -9,12 +9,6 @@ if (!isset($_SESSION['id_user'])) {
 
 $user_id = $_SESSION['id_user'];
 
-if ($user_id) {
-    echo "ID de usuario en sesión: " . htmlspecialchars($user_id);
-} else {
-    echo "No se pudo obtener el ID de usuario.";
-}
-
 $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
 if (!$conexion) {

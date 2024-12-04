@@ -79,7 +79,7 @@ $conexion->close();
             </select>
 
             <label for="cantidad">Quantity:</label>
-            <input type="number" id="cantidad" name="cantidad" required placeholder="Enter the quantity" min="1">
+            <input type="number" id="cantidad" name="cantidad" required placeholder="Enter the quantity" min="1" onchange="validateQuantity(this)">
 
             <label for="proveedor">Supplier:</label>
             <select id="proveedor" name="proveedor" required>
@@ -114,6 +114,14 @@ $conexion->close();
         // Aquí puedes mostrar el monto total en algún lugar si lo deseas
         console.log("Total Amount: $" + totalAmount.toFixed(2));
     });
+
+    function validateQuantity(input) {
+        const value = parseInt(input.value);
+        if (value <= 0) {
+            alert("La cantidad debe ser un número positivo mayor que cero.");
+            input.value = ""; 
+        }
+    }
 </script>
 
 </body>

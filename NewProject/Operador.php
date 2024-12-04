@@ -1,6 +1,8 @@
 <?php
 session_start(); // Start the session to access session variables
 
+include 'includes/opnav.php';
+
 // Check if the user is logged in
 if (!isset($_SESSION['id_user'])) {
     header("Location: login.php");
@@ -58,89 +60,15 @@ $conexion->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operator</title>
-    <link rel="stylesheet" href="includes/statics/css/bootstrap.min.css">
-    <style>
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f7fa;
-    margin: 0;
-    padding: 20px;
-}
-
-form {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-}
-
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-input[type="date"],
-textarea,
-select {
-    width: 100%;
-    max-width: 575px; /* Ancho máximo reducido */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.3s;
-}
-
-input[type="date"]:focus,
-textarea:focus,
-select:focus {
-    border-color: #ff8c00; /* Naranja */
-    outline: none;
-}
-
-textarea {
-    resize: none; /* Evita el cambio de tamaño */
-    height: 80px; /* Altura fija */
-}
-
-.btn {
-    background-color: #ff8c00; /* Naranja */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-    display: block;
-    width: 100%;
-}
-
-.btn:hover {
-    background-color: #e07b00; /* Naranja más oscuro */
-}
-    </style>
+    <link rel="stylesheet" href="css/tecnico.css">
 </head>
 <body>
-    <div class="container mt-5">
+    <section class="reporte-operador">
         <h2>Failure Report</h2>
         <form action="Operador.php" method="POST">
             <div class="form-group">
                 <label for="fecha">Report Date:</label>
-                <input type="date" class="form-control" id="fecha" name="fecha" required>
+                <input type="date" class="form-control" id="fecha" name="fecha" required onchange="validateDateVolII(this)">
             </div>
             <div class="form-group">
                 <label for="descripcion">Failure Description:</label>
@@ -171,6 +99,7 @@ textarea {
             </div>
             <button type="submit" class="btn btn-primary">Submit Report</button>
         </form>
-    </div>
+    </section>
+    <script src="functions.js"></script>
 </body>
 </html>

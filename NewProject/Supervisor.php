@@ -37,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_work_order->execute()) {
         $work_order_id = $conexion->insert_id;
+        echo "<script>alert('Work order created successfully.');</script>";
 
         // Preparar la consulta para insertar el mantenimiento
         $sql_maintenance = "INSERT INTO maintenance (assignedDate, description, status, equipment, technician, maintenance_types) VALUES (?, ?, 'Pendiente', ?, ?, ?)";
@@ -55,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<div class='alert alert-danger'>Error registering maintenance: " . $stmt_maintenance->error . "</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'>Error registering work order: " . $stmt_work_order->error . "</div>";
+        echo "<script>alert('Error registering work order: " . $stmt_work_order->error . "');</script>";
     }
 
     // Cerrar conexiones
@@ -104,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </select>
 
                 <label for="fecha-limite">Due Date:</label>
-                <input type="date" id="fecha-limite" name="fecha-limite" required>
+                <input type="date" id="fecha-limite" name="fecha-limite" required onchange="validateDate(this)">
 
                 <label for="tipo-mantenimiento">Type of Maintenance:</label>
                 <select id="tipo-mantenimiento" name="tipo-mantenimiento" required>
@@ -240,6 +241,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </section>
 </main>
 
+
+<script src="functions.js"></script>
 </body>
 
 </html>

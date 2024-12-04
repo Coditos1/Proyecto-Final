@@ -24,67 +24,67 @@
     <!-- Main Section -->
     <main>
         <section class="testimonials">
-            <h2><i class="fas fa-quote-left"></i> Lo que dicen nuestros usuarios</h2>
+            <h2><i class="fas fa-quote-left"></i> What Our Users Say</h2>
             <div class="testimonial-container">
                 <div class="testimonial">
-                    <p>"El sistema ha transformado nuestra manera de gestionar el mantenimiento. Ahora todo está centralizado y es mucho más fácil hacer un seguimiento de las tareas." - <strong>Juan Pérez, Supervisor</strong></p>
+                    <p>"The system has transformed our way of managing maintenance. Now everything is centralized and it's much easier to keep track of tasks." - <strong>Juan Pérez, Supervisor</strong></p>
                 </div>
                 <div class="testimonial">
-                    <p>"Como técnico, puedo acceder rápidamente a mis órdenes de trabajo y reportar el estado de las máquinas de manera eficiente. Esto ha mejorado nuestra productividad." - <strong>Ana García, Técnica</strong></p>
+                    <p>"As a technician, I can quickly access my work orders and report the status of machines efficiently. This has improved our productivity." - <strong>Ana García, Technician</strong></p>
                 </div>
                 <div class="testimonial">
-                    <p>"Como operador, puedo generar reportes de fallas de manera simple. El sistema ha mejorado la comunicación entre los equipos." - <strong>Carlos Ruiz, Operador</strong></p>
+                    <p>"As an operator, I can generate failure reports in a simple way. The system has improved communication between teams." - <strong>Carlos Ruiz, Operator</strong></p>
                 </div>
             </div>
         </section>
         <section class="faq">
-            <h2>Preguntas Frecuentes</h2>
+            <h2>Frequently Asked Questions</h2>
             <div class="faq-item">
                 <input type="checkbox" id="faq1">
-                <label for="faq1">¿Qué es el Sistema de Gestión de Mantenimiento Industrial?</label>
+                <label for="faq1">What is the Industrial Maintenance Management System?</label>
                 <div class="answer">
-                    <p>Es una plataforma diseñada para optimizar la gestión de mantenimiento, mejorando la eficiencia en la organización y el seguimiento de tareas.</p>
+                    <p>It is a platform designed to optimize maintenance management, improving efficiency in organization and task tracking.</p>
                 </div>
             </div>
             <div class="faq-item">
                 <input type="checkbox" id="faq2">
-                <label for="faq2">¿Qué beneficios ofrece para los supervisores?</label>
+                <label for="faq2">What benefits does it offer for supervisors?</label>
                 <div class="answer">
-                    <p>Los supervisores pueden registrar usuarios, asignar tareas, y consultar reportes detallados sobre el estado de las máquinas.</p>
+                    <p>Supervisors can register users, assign tasks, and consult detailed reports on the status of machines.</p>
                 </div>
             </div>
             <div class="faq-item">
                 <input type="checkbox" id="faq3">
-                <label for="faq3">¿El sistema es accesible desde cualquier dispositivo?</label>
+                <label for="faq3">Is the system accessible from any device?</label>
                 <div class="answer">
-                    <p>Sí, el sistema es accesible desde cualquier dispositivo con conexión a internet, lo que facilita la gestión remota.</p>
+                    <p>Yes, the system is accessible from any device with an internet connection, making remote management easier.</p>
                 </div>
             </div>
         </section>
         <section class="success-cases">
-            <h2><i class="fas fa-trophy"></i> Casos de Éxito</h2>
+            <h2><i class="fas fa-trophy"></i> Success Stories</h2>
             <div class="case">
-                <h3><i class="fas fa-industry"></i> Industrias TecnoMec</h3>
+                <h3><i class="fas fa-industry"></i> TecnoMec Industries</h3>
                 <p>
-                    <strong>Ubicación:</strong> Monterrey, México<br>
-                    <strong>Sector:</strong> Manufactura de maquinaria pesada<br>
-                    <strong>Resultados:</strong> Gracias a la implementación de nuestro sistema, TecnoMec logró reducir un 35% los tiempos de inactividad de su maquinaria crítica, mejorando su productividad y disminuyendo costos operativos en un 20%.
+                    <strong>Location:</strong> Monterrey, Mexico<br>
+                    <strong>Sector:</strong> Heavy Machinery Manufacturing<br>
+                    <strong>Results:</strong> Thanks to the implementation of our system, TecnoMec achieved a 35% reduction in downtime of its critical machinery, improving its productivity and decreasing operational costs by 20%.
                 </p>
             </div>
             <div class="case">
-                <h3><i class="fas fa-warehouse"></i> AgroSoluciones S.A.</h3>
+                <h3><i class="fas fa-warehouse"></i> AgroSolutions S.A.</h3>
                 <p>
-                    <strong>Ubicación:</strong> Córdoba, Argentina<br>
-                    <strong>Sector:</strong> Agroindustria<br>
-                    <strong>Resultados:</strong> AgroSoluciones utilizó nuestro sistema para optimizar su programa de mantenimiento preventivo, evitando fallas en época de cosecha. Esto se tradujo en un aumento del 15% en la eficiencia operativa.
+                    <strong>Location:</strong> Córdoba, Argentina<br>
+                    <strong>Sector:</strong> Agroindustry<br>
+                    <strong>Results:</strong> AgroSolutions used our system to optimize its preventive maintenance program, avoiding failures during harvest season. This translated into a 15% increase in operational efficiency.
                 </p>
             </div>
             <div class="case">
-                <h3><i class="fas fa-oil-can"></i> PetroQuim Líder</h3>
+                <h3><i class="fas fa-oil-can"></i> PetroQuim Leader</h3>
                 <p>
-                    <strong>Ubicación:</strong> Bogotá, Colombia<br>
-                    <strong>Sector:</strong> Energía y Petróleo<br>
-                    <strong>Resultados:</strong> PetroQuim implementó nuestro sistema para centralizar la gestión de mantenimiento en tres plantas. El seguimiento en tiempo real permitió ahorrar $200,000 anuales en reparaciones correctivas.
+                    <strong>Location:</strong> Bogotá, Colombia<br>
+                    <strong>Sector:</strong> Energy and Petroleum<br>
+                    <strong>Results:</strong> PetroQuim implemented our system to centralize maintenance management in three plants. Real-time tracking allowed for an annual savings of $200,000 in corrective repairs.
                 </p>
             </div>
         </section>
@@ -126,9 +126,5 @@
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Sistema de Gestión de Mantenimiento. Todos los derechos reservados.</p>
-    </footer>
 </body>
 </html>

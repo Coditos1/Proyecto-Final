@@ -42,13 +42,13 @@
             <h2>Machine Registration</h2>
 
             <label for="name">Machine Name:</label>
-            <input type="text" id="name" name="name" required placeholder="Enter the machine name">
+            <input type="text" id="name" name="name" autocomplete="off" required placeholder="Enter the machine name">
 
             <label for="model">Model:</label>
-            <input type="text" id="model" name="model" required placeholder="Enter the machine model">
+            <input type="text" id="model" name="model" autocomplete="off" required placeholder="Enter the machine model">
 
             <label for="brand">Brand:</label>
-            <input type="text" id="brand" name="brand" required placeholder="Enter the machine brand">
+            <input type="text" id="brand" name="brand" autocomplete="off" required placeholder="Enter the machine brand">
 
             <label for="status">Status:</label>
             <select id="status" name="status" required>

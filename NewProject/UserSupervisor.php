@@ -42,7 +42,7 @@
             <h2>Supervisor Registration</h2>
 
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required placeholder="Enter name">
+            <input type="text" id="name" name="name" required placeholder="Enter name" >
 
             <label for="lastName">Last Name:</label>
             <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
@@ -56,5 +56,7 @@
             <button type="submit" name="submit">Register Supervisor</button>
         </form>
     </main>
+
+<script src="functions.js"></script>
 </body>
 </html>

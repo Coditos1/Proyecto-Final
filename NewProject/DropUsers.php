@@ -19,9 +19,9 @@ $search_user = isset($_POST['search_user']) ? $_POST['search_user'] : '';
 
 // Consulta para obtener todos los técnicos y operadores
 $sql = "
-    (SELECT id_operator AS id_user, name, lastname, email, numTel FROM operator WHERE name LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%' OR lastname LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%')
+    (SELECT id_operator AS id_user, name, lastname, email, numTel, 'operator' AS role FROM operator WHERE name LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%' OR lastname LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%')
     UNION
-    (SELECT id_technician AS id_user, name, lastname, email, numTel FROM technician WHERE name LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%' OR lastname LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%')
+    (SELECT id_technician AS id_user, name, lastname, email, numTel, 'technician' AS role FROM technician WHERE name LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%' OR lastname LIKE '%" . mysqli_real_escape_string($conexion, $search_user) . "%')
 ";
 
 // Ejecutar la consulta
@@ -32,87 +32,37 @@ if (!$result) {
 }
 
 // Eliminar usuario
-if (isset($_POST['delete_user'])) {
+if (isset($_POST['user_id'])) {
     $user_id = $_POST['user_id'];
+    $role = $_POST['role']; // Obtener el rol del usuario
 
-    // Verificar si el usuario tiene procesos pendientes en otras tablas
-    $check_sql = "SELECT COUNT(*) as count FROM operator_equipment WHERE operator = ? 
-                  UNION ALL 
-                  SELECT COUNT(*) as count FROM failure WHERE operator = ?
-                  UNION ALL
-                  SELECT COUNT(*) as count FROM maintenance_history WHERE id_user = ?";
-    $stmt = $conexion->prepare($check_sql);
-    $stmt->bind_param("iii", $user_id, $user_id, $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    $has_pending_processes = false;
-    while ($row = $result->fetch_assoc()) {
+    if ($role === 'technician') {
+        // Verificar si el técnico tiene órdenes de trabajo pendientes
+        $check_sql = "SELECT COUNT(*) as count FROM work_orders WHERE technician = ? AND status = 'Pendiente'";
+        $stmt = $conexion->prepare($check_sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result_check = $stmt->get_result();
+        $row = $result_check->fetch_assoc();
+
         if ($row['count'] > 0) {
-            $has_pending_processes = true;
-            break;
-        }
-    }
-    $stmt->close();
-
-    if ($has_pending_processes) {
-        echo "<script>alert('No se puede eliminar el usuario. Tiene procesos pendientes en otras tablas.');</script>";
-    } else {
-        // Intentar eliminar de la tabla operator
-        $delete_operator_sql = "DELETE FROM operator WHERE id_operator = ?";
-        $stmt = $conexion->prepare($delete_operator_sql);
-        $stmt->bind_param("i", $user_id);
-        try {
+            echo "<script>alert('Cannot delete the technician. He has pending work orders.');</script>";
+        } else {
+            // Eliminar técnico
+            $delete_sql = "DELETE FROM technician WHERE id_technician = ?";
+            $stmt = $conexion->prepare($delete_sql);
+            $stmt->bind_param("i", $user_id);
             $stmt->execute();
-            $stmt->close();
-        } catch (mysqli_sql_exception $e) {
-            echo "<script>alert('Error al eliminar el usuario.');</script>";
-            $stmt->close();
+            echo "<script>alert('Technician successfully removed.'); window.location.href='DropUsers.php';</script>";
         }
-
-        // Intentar eliminar de la tabla technician
-        $delete_technician_sql = "DELETE FROM technician WHERE id_technician = ?";
-        $stmt = $conexion->prepare($delete_technician_sql);
+    } else {
+        // Eliminar operador
+        $delete_sql = "DELETE FROM operator WHERE id_operator = ?";
+        $stmt = $conexion->prepare($delete_sql);
         $stmt->bind_param("i", $user_id);
-        try {
-            $stmt->execute();
-            $stmt->close();
-        } catch (mysqli_sql_exception $e) {
-            echo "<script>alert('Error al eliminar el usuario.');</script>";
-            $stmt->close();
-        }
+        $stmt->execute();
+        echo "<script>alert('Operator successfully removed.'); window.location.href='DropUsers.php';</script>";
     }
-}
-
-// Actualizar usuario
-if (isset($_POST['id_user'])) {
-    $id_user = $_POST['id_user'];
-    $user_name = $_POST['user_name'];
-    $user_lastname = $_POST['user_lastname'];
-    $user_email = $_POST['user_email'];
-    $user_phone = $_POST['user_phone'];
-    $user_type = $_POST['user_type']; // Aunque esté deshabilitado, se puede enviar
-
-    // Preparar la consulta de actualización
-    if ($user_type === 'operator') {
-        $update_sql = "UPDATE operator SET name = ?, lastname = ?, email = ?, numTel = ? WHERE id_operator = ?";
-    } else {
-        $update_sql = "UPDATE technician SET name = ?, lastname = ?, email = ?, numTel = ? WHERE id_technician = ?";
-    }
-
-    $stmt = $conexion->prepare($update_sql);
-    if ($user_type === 'operator') {
-        $stmt->bind_param("ssssi", $user_name, $user_lastname, $user_email, $user_phone, $id_user);
-    } else {
-        $stmt->bind_param("ssssi", $user_name, $user_lastname, $user_email, $user_phone, $id_user);
-    }
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Usuario actualizado correctamente.');</script>";
-    } else {
-        echo "<script>alert('Error al actualizar el usuario.');</script>";
-    }
-    $stmt->close();
 }
 ?>
 
@@ -278,7 +228,9 @@ if (isset($_POST['id_user'])) {
                                 <td>
                                     <form method='POST' action='DropUsers.php' style='display:inline;'>
                                         <input type='hidden' name='user_id' value='" . $row["id_user"] . "'>
-                                        <button type='submit' class='btn-accion eliminar' onclick='return confirm(\"¿Estás seguro de que deseas eliminar este usuario?\");'>Eliminar</button>
+                                        <input type='hidden' name='role' value='" . $row["role"] . "'>
+                                        <button type='submit' class='btn-accion eliminar' onclick='return confirm(\"¿Estás seguro de que deseas eliminar este usuario?\");'>Delete</button>
+                                         <button type='button' class='btn-accion actualizar' onclick='openUserModal(" . $row["id_user"] . ", \"" . htmlspecialchars($row["name"]) . "\", \"" . $row["role"] . "\", \"" . htmlspecialchars($row["lastname"]) . "\", \"" . htmlspecialchars($row["email"]) . "\", \"" . htmlspecialchars($row["numTel"]) . "\");'>Update</button>
                                     </form>
                                 </td>
                               </tr>";

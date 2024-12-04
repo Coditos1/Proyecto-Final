@@ -36,9 +36,71 @@ $result = $stmt->get_result();
 ?>
 
 <body>
+    <style>
+        .tabla-container {
+            max-height: 75vh; /* Increase max height of the table container */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+            margin-top: 20px; /* Top margin to separate from filters */
+        }
+
+        table {
+            width: 100%; /* Ensure table takes full width of container */
+            border-collapse: collapse; /* Collapse borders for better design */
+        }
+
+        th, td {
+            padding: 10px; /* Internal spacing in cells */
+            padding-left: 70px;
+            text-align: center; /* Center text */
+            border-bottom: 1px solid #ddd; /* Bottom line to separate rows */
+            width: 20%; /* Ensure each column takes 20% of total width */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Background color for headers */
+        }
+
+        .filter-form {
+            margin: 20px 0; /* Espaciado superior e inferior */
+            padding: 15px; /* Espaciado interno */
+            border: 1px solid #ddd; /* Borde alrededor del formulario */
+            border-radius: 5px; /* Bordes redondeados */
+            background-color: #f9f9f9; /* Color de fondo */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        }
+
+        .filter-form label {
+            font-weight: bold; /* Negrita para las etiquetas */
+            margin-right: 10px; /* Espaciado a la derecha */
+        }
+
+        .filter-form select {
+            padding: 5px; /* Espaciado interno para el select */
+            border: 1px solid #ccc; /* Borde del select */
+            border-radius: 4px; /* Bordes redondeados */
+            margin-right: 10px; /* Espaciado a la derecha */
+        }
+
+        .filter-form button {
+            padding: 6px 12px; /* Espaciado interno del botón */
+            background-color: orange; /* Color de fondo del botón */
+            color: white; /* Color del texto del botón */
+            border: none; /* Sin borde */
+            border-radius: 4px; /* Bordes redondeados */
+            cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+            transition: background-color 0.3s; /* Transición suave para el color de fondo */
+            width: 150px;
+        }
+
+        .filter-form button:hover {
+            background-color: darkorange; /* Color de fondo al pasar el mouse */
+        }
+    </style>
+    <main class="reporte-container">
+    <section class="reportes-tabla">
     <h1>Maintenance Reports</h1>
     
-    <form method="POST" action="">
+    <form method="POST" action="" class="filter-form">
         <label for="result_filter">Filter by Result:</label>
         <select name="result_filter" id="result_filter">
             <option value="">All</option>
@@ -49,9 +111,10 @@ $result = $stmt->get_result();
         <button type="submit">Filter</button>
     </form>
 
-    <table class="reportes-tabla">
-        <thead>
-            <tr>
+    <div class="tabla-container">
+        <table>
+            <thead>
+                <tr>
                 <th>Equipment Name</th>
                 <th>Technician</th>
                 <th>Completion Date</th>
@@ -88,6 +151,8 @@ $result = $stmt->get_result();
             }
             ?>
         </tbody>
-    </table>
+        </div>
+        </section>
+    </main>
 </body>
 </html>

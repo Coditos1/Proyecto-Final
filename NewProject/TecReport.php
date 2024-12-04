@@ -9,12 +9,6 @@ if (!isset($_SESSION['id_user'])) {
 
 $user_id = $_SESSION['id_user'];
 
-if ($user_id) {
-    echo "ID de usuario en sesión: " . htmlspecialchars($user_id);
-} else {
-    echo "No se pudo obtener el ID de usuario.";
-}
-
 $conexion = mysqli_connect("127.0.0.1", "root", "", "industrial_maintenance");
 
 if (!$conexion) {
@@ -52,6 +46,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_orden = $_POST['id_orden']; // ID de la orden de trabajo
     $maintenance_id = $id_orden; // Usar el mismo ID para maintenance
 
+    // Nuevas variables para el repuesto y la cantidad
+    $spare_part_id = $_POST['spare_part']; // ID del repuesto
+    $used_quantity = $_POST['used_quantity']; // Cantidad utilizada
+
+    // Verificar el stock disponible del repuesto
+    $sql_check_stock = "SELECT stock FROM spare_parts WHERE id_spareParts = ?";
+    $stmt_check_stock = $conexion->prepare($sql_check_stock);
+    $stmt_check_stock->bind_param("i", $spare_part_id);
+    $stmt_check_stock->execute();
+    $result_check_stock = $stmt_check_stock->get_result();
+    
+    if ($result_check_stock->num_rows > 0) {
+        $row = $result_check_stock->fetch_assoc();
+        $available_stock = $row['stock'];
+
+        // Validar si hay suficiente stock
+        if ($available_stock < $used_quantity) {
+            echo "<script>alert('Insufficient stock for the selected spare part.');</script>";
+            // Aquí puedes detener el proceso si es necesario
+            return; // Detener la ejecución del script
+        }
+    } else {
+        echo "<script>alert('Spare part not found.');</script>";
+        return; // Detener la ejecución del script
+    }
+
     // Inserción en la tabla maintenance_history
     $sql_insert = "INSERT INTO maintenance_history (completionDate, results, observations, equipment, maintenance, id_user) 
                    VALUES (?, ?, ?, ?, ?, ?)";
@@ -62,6 +82,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Ejecutar la consulta
     if ($stmt->execute()) {
+        $id_history = $stmt->insert_id; // Obtén el ID de la última inserción
+
+        // Inserción en la tabla spare_history
+        $sql_insert_spare = "INSERT INTO spare_history (spare_parts, usedQuantity, maintenance_history, usageDate) VALUES (?, ?, ?, ?)";
+        $stmt_spare = $conexion->prepare($sql_insert_spare);
+        $stmt_spare->bind_param("iiis", $spare_part_id, $used_quantity, $id_history, $fecha_mantenimiento);
+        $stmt_spare->execute();
+        $stmt_spare->close();
+
+        // Actualizar el stock en spare_parts
+        $sql_update_stock = "UPDATE spare_parts SET stock = stock - ? WHERE id_spareParts = ?";
+        $stmt_update_stock = $conexion->prepare($sql_update_stock);
+        $stmt_update_stock->bind_param("ii", $used_quantity, $spare_part_id);
+        $stmt_update_stock->execute();
+        $stmt_update_stock->close();
+
         // Actualizar el estado de la orden de trabajo y el estado de mantenimiento según el resultado
         if ($resultados == "Exitoso") {
             // Actualizar el estado de la orden de trabajo y el estado de mantenimiento a 'Completada'
@@ -102,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form method="POST" action="">
         <label for="id_orden">Work Order ID:</label>
         <select id="id_orden" name="id_orden" required onchange="updateEquipment()">
-            <option value="">Seleccione una orden de trabajo</option>
+            <option value="">Select a work order</option>
             <?php while ($row = $result_work_orders->fetch_assoc()): ?>
                 <option value="<?php echo $row['id_workOrders']; ?>" data-equipment="<?php echo $row['equipment']; ?>">
                     <?php echo htmlspecialchars($row['id_workOrders']); ?>
@@ -112,14 +148,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="equipment">Equipment:</label>
         <select id="equipment" name="equipment" required>
-            <option value="">Seleccione un equipo</option>
+            <option value="">Select an equipment</option>
             <?php foreach ($equipos as $id => $name): ?>
                 <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($name); ?></option>
             <?php endforeach; ?>
         </select>
 
         <label for="fecha_mantenimiento">Maintenance Date:</label>
-        <input type="date" id="fecha_mantenimiento" name="fecha_mantenimiento" required>
+        <input type="date" id="fecha_mantenimiento" name="fecha_mantenimiento" required onchange="validateDate(this)">
 
         <label for="resultados">Maintenance Results:</label>
         <select id="resultados" name="resultados" required>
@@ -130,6 +166,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="observaciones">Observations:</label>
         <textarea id="observaciones" name="observaciones" rows="4" required></textarea>
+
+        <label for="spare_part">Repuesto:</label>
+        <select id="spare_part" name="spare_part" required>
+            <option value="">Select a spare part</option>
+            <?php
+            // Obtener los repuestos disponibles
+            $sql_spare_parts = "SELECT id_spareParts, name FROM spare_parts";
+            $result_spare_parts = $conexion->query($sql_spare_parts);
+            while ($row = $result_spare_parts->fetch_assoc()): ?>
+                <option value="<?php echo $row['id_spareParts']; ?>"><?php echo htmlspecialchars($row['name']); ?></option>
+            <?php endwhile; ?>
+        </select>
+
+        <label for="used_quantity">Used Quantity:</label>
+        <input type="number" id="used_quantity" name="used_quantity" required min="1" onchange="validateQuantity(this)">
 
         <button type="submit">Submit Report</button>
     </form>
@@ -153,6 +204,8 @@ function updateEquipment() {
     }
 }
 </script>
+
+<script src="functions.js"></script>
 
 </main>
 </body>

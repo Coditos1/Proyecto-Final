@@ -132,7 +132,7 @@ tr:hover {
 }
 
 #reporte-mantenimiento button {
-    background-color: #007bff; /* Color de fondo del botón */
+    background-color: orange; /* Color de fondo del botón */
     color: white; /* Color del texto */
     border: none; /* Sin borde */
     padding: 10px 15px; /* Espaciado interno */
@@ -142,7 +142,7 @@ tr:hover {
 }
 
 #reporte-mantenimiento button:hover {
-    background-color: #0056b3; /* Color de fondo al pasar el mouse */
+    background-color: darkorange; /* Color de fondo al pasar el mouse */
 }
 
 .open-modal {
@@ -158,4 +158,73 @@ tr:hover {
 
 .open-modal:hover {
     background-color: darkorange; /* Color de fondo al pasar el mouse */
+}
+
+.reporte-operador {
+    background-color: #fff; /* Fondo blanco para la sección */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+    margin: 100px auto 20px 700px; /* Aumentar margen izquierdo para mover a la derecha */
+    width: 50%; /* Reducir ancho de la sección */
+    max-width: 600px; /* Ancho máximo para la sección */
+}
+
+.form-group {
+    margin-bottom: 15px; /* Espaciado entre grupos de formulario */
+}
+
+.btn-primary {
+    background-color: orange; /* Color de fondo del botón */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar */
+    transition: background-color 0.3s; /* Transición suave */
+}
+
+.btn-primary:hover {
+    background-color: darkorange; /* Color de fondo al pasar el mouse */
+}
+
+.reporte-operador h2 {
+    color: #333; /* Color del título */
+    font-size: 28px; /* Tamaño de fuente más grande */
+    margin-bottom: 20px; /* Espaciado inferior */
+    text-align: center; /* Centrar el título */
+}
+
+.reporte-operador input,
+.reporte-operador select,
+.reporte-operador textarea {
+    width: 90%; /* Ancho completo */
+    padding: 12px; /* Espaciado interno */
+    margin-top: 5px; /* Espaciado superior */
+    margin-bottom: 15px; /* Espaciado inferior */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 4px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    font-size: 16px; /* Tamaño de fuente */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Transición suave */
+}
+
+.reporte-operador input:focus,
+.reporte-operador select:focus,
+.reporte-operador textarea:focus {
+    border-color: darkorange; /* Color del borde al enfocar */
+    box-shadow: 0 0 5px #ff9100cb; /* Sombra al enfocar */
+}
+
+.reporte-operador textarea {
+    width: 90%; /* Ancho completo */
+    padding: 12px; /* Espaciado interno */
+    margin-top: 5px; /* Espaciado superior */
+    margin-bottom: 15px; /* Espaciado inferior */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 4px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    font-size: 16px; /* Tamaño de fuente */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Transición suave */
+    resize: none; /* Deshabilitar el cambio de tamaño */
 }

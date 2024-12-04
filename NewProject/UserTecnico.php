@@ -29,9 +29,9 @@
         $stmt->bind_param("ssssssss", $name, $lastName, $secLastName, $numTel, $email, $specialty, $user, $password);
         
         if ($stmt->execute()) {
-            echo "New technician registered successfully.";
+            echo "<script>alert('New technician registered successfully.');</script>";
         } else {
-            echo "Error: " . $stmt->error;
+            echo "<script>alert('Error: " . $stmt->error . "');</script>";
         }
         
     }
@@ -41,22 +41,24 @@
             <h2>Technician Registration</h2>
 
             <label for="name">First Name:</label>
-            <input type="text" id="name" name="name" required placeholder="Enter first name">
+            <input type="text" id="name" name="name" required placeholder="Enter first name" oninput="validateLetters(this)">
 
             <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
+            <input type="text" id="lastName" name="lastName" required placeholder="Enter last name" oninput="validateLetters(this)" >
 
             <label for="secLastName">Second Last Name:</label>
-            <input type="text" id="secLastName" name="secLastName" placeholder="Enter second last name">
+            <input type="text" id="secLastName" name="secLastName" placeholder="Enter second last name" oninput="validateLetters(this)">
 
             <label for="numTel">Phone Number:</label>
-            <input type="text" id="numTel" name="numTel" required placeholder="Enter phone number">
+            <input type="text" id="numTel" name="numTel" required placeholder="(666) 666-6666" oninput="formatPhoneNumber(this)">
 
             <label for="specialty">Specialty:</label>
-            <input type="text" id="specialty" name="specialty" required placeholder="Enter technician's specialty">
+            <input type="text" id="specialty" name="specialty" required placeholder="Enter technician's specialty" oninput="validateLetters(this)">
 
             <button type="submit" name="submit">Register Technician</button>
         </form>
     </main>
+
+    <script src="functions.js"></script>
 </body>
 </html>
